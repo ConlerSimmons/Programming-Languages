@@ -3,11 +3,25 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Class that represents a token in the SILLY language.
- *   @author Dave Reed
- *   @version 1/20/25
+ * Token representation for the SILLY language.
+ * Handles lexical analysis and token classification.
+ * Supports multiple token types including:
+ * - Keywords and Delimiters
+ * - Mathematical and Boolean operators
+ * - Sequence functions
+ * - Literals (numbers, booleans, characters, strings)
+ * - Identifiers
+ *
+ * @author Dave Reed (modified by Conler Simmons)
+ * @version 2.7.0 [2024]
+ * @see TokenStream
  */
 public class Token {
+    // Enum definitions first
+    public static enum Type { UNKNOWN, DELIM, KEYWORD, IDENTIFIER, BOOL_FUNC, MATH_FUNC, SEQ_FUNC,  
+    	                      NUM_LITERAL, BOOL_LITERAL, CHAR_LITERAL, STR_LITERAL }
+
+    // Fields
     public static List<String> delims =    Arrays.asList( "{", "}", "(", ")", "[", "]"         );
     public static List<String> booleans =  Arrays.asList( "true", "false"                      );
     public static List<String> mathFuncs = Arrays.asList( "+", "*", "/"                        );  
@@ -16,69 +30,64 @@ public class Token {
     public static List<String> seqFuncs =  Arrays.asList( "len", "get", "cat", "str"           ); 
     public static List<String> keywords =  Arrays.asList( "=", "print", "if", "else", "while", 
     		                                              "repeat", "func", "return"           ); 
-    
-    public static enum Type { UNKNOWN, DELIM, KEYWORD, IDENTIFIER, BOOL_FUNC, MATH_FUNC, SEQ_FUNC,  
-    	                      NUM_LITERAL, BOOL_LITERAL, CHAR_LITERAL, STR_LITERAL }
+    private String token;
+    private Token.Type type;
 
-    private String strVal;
-    
-    /**
-     * Constructs a token out of the given string.
-     *   @param str the string value of the token
-     */
-    public Token(String str) {
-        this.strVal = str;
+    // Constructor
+    public Token(String tok) {
+        this.token = tok;
     }
     
+    // Core functionality methods
     /**
      * Identifies what type of token it is.
      *   @return the token type (e.g., Token.Type.IDENTIFIER)
      */
     public Token.Type getType() {
-    	if (Character.isDigit(this.strVal.charAt(0)) || 
-    	    (this.strVal.charAt(0) == '-' && this.strVal.length() > 1 && Character.isDigit(this.strVal.charAt(1)))) {
+    	if (Character.isDigit(this.token.charAt(0)) || 
+    	    (this.token.charAt(0) == '-' && this.token.length() > 1 && Character.isDigit(this.token.charAt(1)))) {
             try {
-            	Double.parseDouble(strVal);
+            	Double.parseDouble(token);
             	return Token.Type.NUM_LITERAL;
             }
             catch (Exception e) {
                 return Token.Type.UNKNOWN;
             }
         }
-    	else if (Token.delims.contains(this.strVal)) {
+    	else if (Token.delims.contains(this.token)) {
             return Token.Type.DELIM;
         }
-        else if (Token.keywords.contains(this.strVal)) {
+        else if (Token.keywords.contains(this.token)) {
             return Token.Type.KEYWORD;
         }
-        else if (Token.boolFuncs.contains(this.strVal)) {
+        else if (Token.boolFuncs.contains(this.token)) {
             return Token.Type.BOOL_FUNC;
         }
-        else if (Token.mathFuncs.contains(this.strVal)) {
+        else if (Token.mathFuncs.contains(this.token)) {
             return Token.Type.MATH_FUNC;
         }
-        else if (Token.seqFuncs.contains(this.strVal)) {
+        else if (Token.seqFuncs.contains(this.token)) {
             return Token.Type.SEQ_FUNC;
         }
-        else if (Token.booleans.contains(this.strVal)) {
+        else if (Token.booleans.contains(this.token)) {
         	return Token.Type.BOOL_LITERAL;
         }     
-        else if (Character.isLetter(this.strVal.charAt(0))) {
-            for (int i = 1; i < this.strVal.length(); i++) {
-                if (!Character.isLetterOrDigit(this.strVal.charAt(i))) {
+        else if (Character.isLetter(this.token.charAt(0))) {
+            for (int i = 1; i < this.token.length(); i++) {
+                if (!Character.isLetterOrDigit(this.token.charAt(i))) {
                     return Token.Type.UNKNOWN;
                 }
             }
             return Token.Type.IDENTIFIER;
         }
-        else if (this.strVal.charAt(0) == '"') {
-            if (this.strVal.length() == 1 || this.strVal.charAt(this.strVal.length()-1) != '"') {
+        else if (this.token.charAt(0) == '"') {
+            if (this.token.length() == 1 || this.token.charAt(this.token.length()-1) != '"') {
                 return Token.Type.UNKNOWN;
             }
             return Token.Type.STR_LITERAL;
         }
-        else if (this.strVal.charAt(0) == '\'') {
-            if (this.strVal.length() != 3 || this.strVal.charAt(2) != '\'') {
+        else if (this.token.charAt(0) == '\'') {
+            if (this.token.length() != 3 || this.token.charAt(2) != '\'') {
                 return Token.Type.UNKNOWN;
             }
             return Token.Type.CHAR_LITERAL;
@@ -94,15 +103,16 @@ public class Token {
      *   @return whether the two tokens represent the same string value
      */
     public boolean equals(Object other) {
-        return this.strVal.equals(((Token)other).strVal);
+        return this.token.equals(((Token)other).token);
     }
    
+    // toString last
     /**
      * Converts the token to its string representation.
      *   @return the string representation
      */
     public String toString() {
-        return this.strVal;
+        return this.token;
     }
     
     /**
@@ -110,6 +120,6 @@ public class Token {
      *   @return a hash code for the Token
      */
     public int hashCode() {
-    	return this.strVal.hashCode();
+    	return this.token.hashCode();
     }
 }

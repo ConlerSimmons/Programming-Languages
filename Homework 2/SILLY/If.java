@@ -4,47 +4,58 @@
  * @version 2.1.0 [2025]
  */
 public class If extends Statement {
-    private Expression test;    // Condition
-    private Compound ifBody;    // True branch
-    private Compound elseBody;  // False branch
-
-    /** Parses if statement */
+    // Fields
+    private Expression test;
+    private Compound ifBody;
+    private Compound elseBody;
+    
+    // Constructor
     public If(TokenStream input) throws Exception {
-        validateKeyword(input, "if");
+        validateIfKeyword(input);
         this.test = new Expression(input);
         this.ifBody = new Compound(input);
-        validateKeyword(input, "else");
+        validateElseKeyword(input);
         this.elseBody = new Compound(input);
     }
-
-    /** Executes appropriate branch */
-    @Override 
+    
+    // Core functionality
+    @Override
     public void execute() throws Exception {
-        if (evaluateCondition()) {
+        validateTestExpression();
+        executeAppropriateBody();
+    }
+    
+    // Object overrides
+    @Override
+    public String toString() {
+        return "if " + this.test + " " + this.ifBody + "\nelse " + this.elseBody;
+    }
+    
+    // Helper methods
+    private void validateIfKeyword(TokenStream input) throws Exception {
+        if (!input.next().toString().equals("if")) {
+            throw new Exception("SYNTAX ERROR: Malformed if statement");
+        }
+    }
+    
+    private void validateElseKeyword(TokenStream input) throws Exception {
+        if (!input.next().toString().equals("else")) {
+            throw new Exception("SYNTAX ERROR: Malformed if statement");
+        }
+    }
+    
+    private void validateTestExpression() throws Exception {
+        DataValue test = this.test.evaluate();
+        if (test.getType() != DataValue.Type.BOOLEAN) {
+            throw new Exception("RUNTIME ERROR: If statement requires Boolean test.");
+        }
+    }
+    
+    private void executeAppropriateBody() throws Exception {
+        if (((Boolean) test.evaluate().getValue())) {
             this.ifBody.execute();
         } else {
             this.elseBody.execute();
         }
-    }
-
-    @Override 
-    public String toString() {
-        return String.format("if %s %s\nelse %s", 
-                           this.test, this.ifBody, this.elseBody);
-    }
-
-    // Helper methods
-    private void validateKeyword(TokenStream input, String keyword) throws Exception {
-        if (!input.next().toString().equals(keyword)) {
-            throw new Exception("Syntax Error: Expected '" + keyword + "'");
-        }
-    }
-
-    private boolean evaluateCondition() throws Exception {
-        DataValue result = this.test.evaluate();
-        if (result.getType() != DataValue.Type.BOOLEAN) {
-            throw new Exception("Type Error: Condition must be boolean");
-        }
-        return (Boolean) result.getValue();
     }
 }

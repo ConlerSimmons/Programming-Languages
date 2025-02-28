@@ -2,7 +2,7 @@ import java.util.HashMap;
 
 /**
  * Class that represents a scope record in the program execution.
- *   @author Dave Reed
+ *   @author Dave Reed (modified by Conler Simmons)
  *   @version 1/20/25
  */
 public class ScopeRec {

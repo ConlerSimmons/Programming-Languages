@@ -1,6 +1,6 @@
 /**
  * Abstract class for representing a statement in the SILLY language.
- *   @author Dave Reed
+ *   @author Dave Reed Modified by Conler Simmons
  *   @version 1/20/25
  */
 public abstract class Statement {

@@ -1,6 +1,6 @@
 /**
  * Derived class that represents an output statement in the SILLY language.
- *   @author Dave Reed
+ *   @author Dave Reed Modified by Conler Simmons
  *   @version 1/20/25
  */
 public class Print extends Statement {

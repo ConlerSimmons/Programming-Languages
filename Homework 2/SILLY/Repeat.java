@@ -7,99 +7,60 @@
  * @version 2.0.1 [Feb 2025]
  */
 public class Repeat extends Statement {
-    
-    /** Expression that evaluates to the number of iterations */
-    private final Expression condition;
-    
-    /** Block of statements to be executed in each iteration */
-    private final Compound body;
-    
-    /** 
-     * Constructs a repeat statement by parsing the input stream.
-     * Expected format: repeat <count_expression> <statement_block>
-     * 
-     * @param input TokenStream containing the repeat statement tokens
-     * @throws Exception if syntax is invalid or missing required components
+
+    private Expression expr;
+    private Compound body;
+
+    /**
+     * Reads in a repeat statement from the specified stream
+     *   @param input the stream to be read from
      */
     public Repeat(TokenStream input) throws Exception {
-        ensureKeyword(input);
-        this.condition = new Expression(input);
+        // No super() needed since Statement is abstract with no constructor
+        if (!input.next().toString().equals("repeat")) {
+            throw new Exception("SYNTAX ERROR: Malnourished repeat statement");
+        }
+        this.expr = new Expression(input);
         this.body = new Compound(input);
     }
-    
+
     /**
-     * Executes the repeat statement by running the body multiple times.
-     * First evaluates the condition to get iteration count, then executes
-     * the body that many times.
-     * 
-     * @throws Exception if condition doesn't evaluate to valid integer or
-     *         if body execution fails
+     * Executes the current repeat statement.
      */
     @Override
     public void execute() throws Exception {
-        int iterations = validateAndGetCount();
-        runLoop(iterations);
-    }
-    
-    /**
-     * Verifies the presence of the 'repeat' keyword at the start.
-     * 
-     * @param input TokenStream to check for the keyword
-     * @throws Exception if 'repeat' keyword is missing
-     */
-    private void ensureKeyword(TokenStream input) throws Exception {
-        if (!"repeat".equals(input.next().toString())) {
-            throw new Exception("Oops! I was expecting the 'repeat' keyword here.");
-        }
-    }
-    
-    /**
-     * Evaluates and validates the repeat count expression.
-     * The count must be a non-negative integer value.
-     * 
-     * @return validated integer count for loop iterations
-     * @throws Exception if count is not a number, is negative, or not an integer
-     */
-    private int validateAndGetCount() throws Exception {
-        DataValue value = this.condition.evaluate();
-        
-        if (value.getType() != DataValue.Type.NUMBER) {
+        DataValue eVal = this.expr.evaluate();
+        if (eVal.getType() != DataValue.Type.NUMBER) {
             throw new Exception(
-                "Hold up! The repeat count needs to be a number, but I got something else."
+                "RUNTIME ERROR: repeat statement requires a number."
             );
         }
-        
-        Double count = (Double) value.getValue();
-        if (count % 1 != 0 || count < 0) {
+
+        Double numVal = (Double) eVal.getValue();
+        if (numVal % 1 != 0) {
             throw new Exception(
-                "Hey! The repeat count must be a whole number greater than or equal to zero."
+                "RUNTIME ERROR: repeat statement requires an integer."
             );
         }
-        
-        return count.intValue();
-    }
-    
-    /**
-     * Executes the loop body the specified number of times.
-     * Each iteration runs all statements in the body compound.
-     * 
-     * @param count number of times to execute the loop body
-     * @throws Exception if any iteration fails during execution
-     */
-    private void runLoop(int count) throws Exception {
+
+        int count = numVal.intValue();
+        if (count < 0) {
+            throw new Exception(
+                "RUNTIME ERROR: repeat statement requires a non-negative number."
+            );
+        }
+
         for (int i = 0; i < count; i++) {
             this.body.execute();
         }
     }
-    
+
     /**
-     * Creates a string representation of the repeat statement.
-     * Format: "repeat <condition> <body>"
-     * 
-     * @return formatted string showing the repeat structure
+     * Converts the current repeat statement to a string.
+     *   @return the String representation of this statement
      */
     @Override
     public String toString() {
-        return String.format("repeat %s %s", this.condition, this.body);
+        return "repeat " + this.expr + " " + this.body;
     }
 }

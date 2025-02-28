@@ -6,41 +6,77 @@ import java.util.*;
  * @version 2.1.0 [2025]
  */
 public class MemorySpace {
-    private Stack<ScopeRec> runtimeStack;    // Scope stack
+    private Stack<ScopeRec> runtimeStack;
 
-    /** Creates global scope */
+    /**
+     * Constructs a memory space with a single (global) scope record.
+     */
     public MemorySpace() {
-        this.runtimeStack = new Stack<>();
+        this.runtimeStack = new Stack<ScopeRec>();
         this.runtimeStack.push(new ScopeRec(null));
     }
     
-    // Scope management
-    public void beginNestedScope()  { this.runtimeStack.push(new ScopeRec(this.runtimeStack.peek())); }
-    public void endCurrentScope()   { this.runtimeStack.pop(); }
-    
-    // Variable operations
-    public void declareVariable(Token variable) { 
-        this.runtimeStack.peek().storeInScope(variable, null); 
+    /**
+     * Adds a new scope to the top of the runtime stack (linked to previous top).
+     */
+    public void beginNestedScope() {
+    	this.runtimeStack.push(new ScopeRec(this.runtimeStack.peek()));
     }
     
+    /**
+     * Removes the current scope from the top of the runtime stack.
+     */
+    public void endCurrentScope() {
+    	this.runtimeStack.pop();
+    }   	
+
+    /**
+     * Declares a variable (without storing an actual value).
+     *   @param variable the variable to be declared
+     */
+    public void declareVariable(Token variable) {
+        this.runtimeStack.peek().storeInScope(variable, null);
+    }
+    
+    /** 
+     * Determines if a variable is already declared.
+     * @param variable the variable to be found
+     * @return true if it is declared and/or assigned; else, false
+     */
     public boolean isDeclared(Token variable) {
-        return findScopeInStack(variable) != null;
+    	return (this.findScopeinStack(variable) != null);
     }
     
-    public void storeValue(Token variable, DataValue val) {
-        findScopeInStack(variable).storeInScope(variable, val);
-    }
-    
-    public DataValue lookupValue(Token variable) {
-        return findScopeInStack(variable).lookupInScope(variable);
+    /**
+     * Stores a variable/value in the runtime stack.
+     *   @param variable the variable name
+     *   @param val the value to be stored under that name
+     */
+    public void storeValue(Token variable, DataValue val)  {
+    	this.findScopeinStack(variable).storeInScope(variable, val);
     }
 
-    // Helper method
-    private ScopeRec findScopeInStack(Token variable) {
-        ScopeRec current = this.runtimeStack.peek();
-        while (current != null && !current.declaredInScope(variable)) {
-            current = current.getParentScope();
-        }
-        return current;
+    /**
+     * Determines the value associated with a variable in memory.
+     *   @param variable the variable to look up
+     *   @return the value associated with that variable
+     */      
+    public DataValue lookupValue(Token variable) {
+    	return this.findScopeinStack(variable).lookupInScope(variable);
+    }
+
+    /////////////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Locates the Scope in the stackSegment that contains the specified variable.
+     * @param variable the variable being searched for
+     * @return the Scope containing that variable
+     */
+    private ScopeRec findScopeinStack(Token variable) {
+    	ScopeRec stepper = this.runtimeStack.peek();
+    	while (stepper != null && !stepper.declaredInScope(variable)) {
+    		stepper = stepper.getParentScope();
+    	}
+    	return stepper;
     }
 }

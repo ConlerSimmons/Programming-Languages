@@ -1,14 +1,27 @@
 /** 
  * Core data type interface for SILLY language values
  * @author Dave Reed (modified by Conler Simmons)
- * @version 2.1.0 [Feb 2025]
+ * @version 2/7/24
  */
 public interface DataValue extends Comparable<DataValue> {
-    // Value types supported by SILLY
-    public static enum Type { NUMBER, BOOLEAN, LIST, CHAR }
+    // Type enumeration
+    enum Type {
+        NUMBER("numeric"),
+        BOOLEAN("boolean"),
+        LIST("list"),
+        CHAR("character"),
+        STRING("string");
+        
+        private final String description;
+        Type(String description) { this.description = description; }
+        @Override public String toString() { return description; }
+    }
 
-    // Core interface methods
-    public Object getValue();
-    public DataValue.Type getType();
-    public String toString();
+    // Core methods
+    Object getValue();
+    Type getType();
+    
+    // Object overrides
+    @Override String toString();
+    @Override int compareTo(DataValue other);
 }
