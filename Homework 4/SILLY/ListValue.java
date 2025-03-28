@@ -1,59 +1,80 @@
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * List value implementation for the SILLY language.
- * Provides storage and operations for ordered collections of DataValue objects.
- * Supports basic list operations and maintains type safety through the DataValue interface.
- * Lists can contain mixed types of values (numbers, booleans, chars, strings, or other lists).
+ * Class that represents a list value.
  * 
- * @see DataValue
- * @version 2.7.0 [2024]
- * @author Dave Reed (modified by Conler Simmons)
+ * @author Dave Reed
+ * @version 1/20/25
  */
 public class ListValue implements DataValue {
-    // Fields
-    protected final List<DataValue> value;
-    
-    // Constructors
-    public ListValue() { 
-        this.value = new ArrayList<>(); 
+
+    protected List<DataValue> value;
+
+    /**
+     * Constructs a default list value (empty list).
+     */
+    public ListValue() {
+        this.value = new ArrayList<DataValue>();
     }
-    
+
+    /**
+     * Constructs a list value.
+     * 
+     * @param vals the list values being stored
+     */
     public ListValue(ArrayList<DataValue> vals) {
         this();
-        value.addAll(vals);
-    }
-    
-    // Interface implementations
-    @Override public Object getValue() { 
-        return this.value; 
-    }
-    
-    @Override public DataValue.Type getType() { 
-        return DataValue.Type.LIST; 
-    }
-    
-    @Override public int compareTo(DataValue other) { 
-        return getValue().toString().compareTo(other.getValue().toString()); 
-    }
-    
-    // String formatting methods
-    @Override public String toString() {
-        return formatListContents();
-    }
-    
-    private String formatListContents() {
-        StringBuilder sb = new StringBuilder("[");
-        for (DataValue v : value) {
-            sb.append(formatValue(v)).append(" ");
+        for (DataValue v : vals) {
+            this.value.add(v);
         }
-        return sb.toString().trim() + "]";
     }
-    
-    private String formatValue(DataValue v) {
-        if (v.getType() == DataValue.Type.STRING) return "\"" + v + "\"";
-        if (v.getType() == DataValue.Type.CHAR) return "'" + v + "'";
-        return v.toString();
+
+    /**
+     * Accesses the stored list value.
+     * 
+     * @return the list value (as an Object)
+     */
+    public Object getValue() {
+        return this.value;
+    }
+
+    /**
+     * Identifies the actual type of the value.
+     * 
+     * @return Token.Type.LIST
+     */
+    public DataValue.Type getType() {
+        return DataValue.Type.LIST;
+    }
+
+    /**
+     * Converts the list value to a String.
+     * 
+     * @return a String representation of the list value
+     */
+    public String toString() {
+        String message = "[";
+        for (DataValue v : this.value) {
+            if (v.getType() == DataValue.Type.STRING) {
+                message += "\"" + v + "\" ";
+            } else if (v.getType() == DataValue.Type.CHAR) {
+                message += "'" + v + "' ";
+            } else {
+                message += v + " ";
+            }
+        }
+        return message.trim() + "]";
+    }
+
+    /**
+     * Comparison method for ListValues.
+     * 
+     * @param other the value being compared with
+     * @return negative if <, 0 if ==, positive if >
+     */
+    public int compareTo(DataValue other) {
+        return (this.getValue().toString()).compareTo(
+                other.getValue().toString());
     }
 }

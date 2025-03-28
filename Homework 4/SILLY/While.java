@@ -1,49 +1,57 @@
 /**
- * While statement implementation
- * @author Dave Reed (modified by Conler Simmons)
- * @version 2/7/24
+ * Derived class that represents a while statement in the SILLY language.
+ * 
+ * @author Dave Reed & Owen McGrath
+ * @version 1/20/25
  */
 public class While extends Statement {
-    // Core components
-    private final Expression condition;
-    private final Compound body;
 
-    // Constructor
+    private Expression expr;
+    private Compound body;
+
+    /**
+     * Reads in a while statement from the specified stream
+     * 
+     * @param input the stream to be read from
+     */
     public While(TokenStream input) throws Exception {
-        validateKeyword(input);
-        this.condition = new Expression(input);
-        this.body = new Compound(input);
-    }
-
-    // Statement execution
-    @Override 
-    public void execute() throws Exception {
-        while (evaluateCondition()) {
-            body.execute();
-        }
-    }
-    
-    @Override 
-    public String toString() {
-        return String.format("while %s %s", condition, body);
-    }
-
-    // Helper methods  
-    private void validateKeyword(TokenStream input) throws Exception {
         if (!input.next().toString().equals("while")) {
             throw new Exception("SYNTAX ERROR: Malformed while statement");
         }
+        this.expr = new Expression(input);
+        this.body = new Compound(input);
     }
 
-    private boolean evaluateCondition() throws Exception {
-        DataValue result = condition.evaluate();
-        validateBooleanType(result);
-        return (Boolean) result.getValue();
-    }
-
-    private void validateBooleanType(DataValue value) throws Exception {
-        if (value.getType() != DataValue.Type.BOOLEAN) {
-            throw new Exception("RUNTIME ERROR: while statement requires Boolean test.");
+    /**
+     * Executes the current while statement.
+     */
+    public void execute() throws Exception {
+        boolean keepLooping = true;
+        while (keepLooping) {
+            DataValue eVal = this.expr.evaluate();
+            if (eVal.getType() != DataValue.Type.BOOLEAN) {
+                throw new Exception(
+                        "RUNTIME ERROR: while statement requires Boolean test.");
+            }
+            if ((Boolean) eVal.getValue()) {
+                try {
+                    this.body.execute();
+                } catch (Return.ReturnException re) {
+                    re.getReturnValue();
+                    throw re;
+                }
+            } else {
+                keepLooping = false;
+            }
         }
+    }
+
+    /**
+     * Converts the current while statement into a String.
+     * 
+     * @return the String representation of this statement
+     */
+    public String toString() {
+        return "while " + this.expr + " " + this.body;
     }
 }

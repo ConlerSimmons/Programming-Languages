@@ -1,60 +1,69 @@
 import java.util.ArrayList;
 
+/**
+ * Derived class that represents a compound statement in the SILLY language.
+ *
+ * @author Dave Reed & Owen McGrath
+ * @version 1/20/25, updated 3/10/25
+ */
 public class Compound extends Statement {
-    // Fields
     private ArrayList<Statement> stmts;
-    
-    // Constructor and initialization
+
+    /**
+     * Reads in a compound statement from the specified stream
+     *
+     * @param input the stream to be read from
+     */
     public Compound(TokenStream input) throws Exception {
-        validateOpen(input);
-        this.stmts = parseStatements(input);
-    }
-    
-    // Core functionality
-    @Override 
-    public void execute() throws Exception {
-        executeWithNewScope();
-    }
-    
-    // Object overrides
-    @Override 
-    public String toString() {
-        return formatCompoundStatement();
-    }
-    
-    // Helper methods
-    private void validateOpen(TokenStream input) throws Exception {
         if (!input.next().toString().equals("{")) {
-            throw new Exception("Syntax Error: Expected '{'");
+            throw new Exception("SYNTAX ERROR: Malformed compound statement");
         }
-    }
-    
-    private ArrayList<Statement> parseStatements(TokenStream input) throws Exception {
-        ArrayList<Statement> statements = new ArrayList<>();
+
+        this.stmts = new ArrayList<Statement>();
         while (!input.lookAhead().toString().equals("}")) {
-            statements.add(Statement.getStatement(input));
+            this.stmts.add(Statement.getStatement(input));
         }
         input.next();
-        return statements;
     }
-    
-    private void executeWithNewScope() throws Exception {
+
+    /**
+     * Executes a compound statement by creating a new scope and executing all
+     * contained statements sequentially.
+     * 
+     * @throws Return.ReturnException If a return statement is executed within the
+     *                                compound block
+     * @throws Exception              If any other exception occurs during statement
+     *                                execution
+     */
+    public void execute() throws Exception {
         Interpreter.MEMORY.beginNestedScope();
-        executeAllStatements();
+
+        try {
+            for (int i = 0; i < this.stmts.size(); i++) {
+                Statement stmt = this.stmts.get(i);
+                stmt.execute();
+            }
+        } catch (Return.ReturnException re) {
+            Interpreter.MEMORY.endCurrentScope();
+            throw re;
+        } catch (Exception e) {
+            Interpreter.MEMORY.endCurrentScope();
+            throw e;
+        }
+
         Interpreter.MEMORY.endCurrentScope();
     }
-    
-    private void executeAllStatements() throws Exception {
+
+    /**
+     * Converts the current compound statement into a String.
+     *
+     * @return the String representation of this statement
+     */
+    public String toString() {
+        String str = "{\n";
         for (Statement stmt : this.stmts) {
-            stmt.execute();
+            str += "  " + stmt + "\n";
         }
-    }
-    
-    private String formatCompoundStatement() {
-        StringBuilder sb = new StringBuilder("{\n");
-        for (Statement stmt : this.stmts) {
-            sb.append("  ").append(stmt).append("\n");
-        }
-        return sb.append("}").toString();
+        return str + "}";
     }
 }

@@ -1,7 +1,7 @@
-/** 
- * Numeric value handler
- * @author Dave Reed (modified by Conler Simmons)
- * @version 2.1.0 [2025]
+/**
+ * Class that represents a number value.
+ *   @author Dave Reed
+ *   @version 1/20/25
  */
 public class NumberValue implements DataValue {
 

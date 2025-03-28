@@ -1,43 +1,67 @@
-/** 
- * Character value implementation for the SILLY language.
- * Provides storage and operations for single character values.
- * Implements the DataValue interface for type safety and comparison operations.
- *
- * @author Dave Reed (modified by Conler Simmons)
- * @version 2.7.0 [2024]
- * @see DataValue
+/**
+ * Class that represents a character value.
+ * 
+ * @author Owen McGrath
+ * @version 2/4/25
  */
-public class CharValue implements DataValue {    
-    // Field
-    private final Character value;
-    
-    // Constructors
-    public CharValue() { 
-        this(' '); 
+public class CharValue implements DataValue {
+
+    protected final Character value;
+
+    /**
+     * Creates a default character value (empty).
+     */
+    public CharValue() {
+        // default value is just an underscore since our syntax rules prevent this from
+        // being empty
+        this('_');
     }
-    
-    public CharValue(char c) { 
-        this.value = c; 
+
+    /**
+     * Constructs a character value.
+     * 
+     * @param c the character being stored
+     */
+    public CharValue(char c) {
+        this.value = c;
     }
-    
-    // Interface implementations
-    @Override public Object getValue() { 
-        return this.value; 
+
+    /**
+     * Accesses the stored character value.
+     * 
+     * @return the character value (as an Object)
+     */
+    public Object getValue() {
+        return this.value;
     }
-    
-    @Override public DataValue.Type getType() { 
-        return DataValue.Type.CHAR; 
+
+    /**
+     * Identifies the actual type of the value.
+     * 
+     * @return DataValue.Type.CHAR
+     */
+    public DataValue.Type getType() {
+        return DataValue.Type.CHAR; // the thing that we defined in the enum
     }
-    
-    @Override public String toString() { 
-        return "'" + this.value + "'"; 
+
+    /**
+     * Converts a character value to a String.
+     * 
+     * @return a String representation of a character value
+     */
+    public String toString() {
+        return "" + this.value;
     }
-    
-    @Override
+
+    /**
+     * Comparison method for CharValues.
+     * 
+     * @param other the value being compared with
+     * @return negative if <, 0 if ==, positive if >
+     */
     public int compareTo(DataValue other) {
-        if (other.getType() != DataValue.Type.CHAR) {
-            throw new IllegalArgumentException("Type Error: Expected CHAR");
-        }
-        return this.value.compareTo((Character) other.getValue());
+        // lots of typecasting
+        return ((Character) this.getValue()).compareTo(
+                (Character) other.getValue());
     }
 }
