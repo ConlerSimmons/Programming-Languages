@@ -5,7 +5,27 @@
  * @version 1/20/25
  */
 public class BooleanValue implements DataValue {
-    protected boolean value;
+    private final boolean logicalValue;   // renamed from value
+
+    /**
+     * Identifies the actual type of the value.
+     * 
+     * @return Token.Type.BOOLEAN
+     */
+    @Override
+    public DataValue.Type getType() {
+        return DataValue.Type.BOOLEAN;
+    }
+
+    /**
+     * Accesses the stored Boolean value.
+     * 
+     * @return the Boolean value (as an Object)
+     */
+    @Override
+    public Object getValue() {
+        return Boolean.valueOf(this.logicalValue);
+    }
 
     /**
      * Constructs a default Boolean value (true).
@@ -20,25 +40,7 @@ public class BooleanValue implements DataValue {
      * @param val the value being stored
      */
     public BooleanValue(boolean val) {
-        this.value = val;
-    }
-
-    /**
-     * Accesses the stored Boolean value.
-     * 
-     * @return the Boolean value (as an Object)
-     */
-    public Object getValue() {
-        return (Boolean) this.value;
-    }
-
-    /**
-     * Identifies the actual type of the value.
-     * 
-     * @return Token.Type.BOOLEAN
-     */
-    public DataValue.Type getType() {
-        return DataValue.Type.BOOLEAN;
+        this.logicalValue = val;
     }
 
     /**
@@ -47,7 +49,7 @@ public class BooleanValue implements DataValue {
      * @return a String representation of the Boolean value
      */
     public String toString() {
-        return "" + this.value;
+        return "" + this.logicalValue;
     }
 
     /**

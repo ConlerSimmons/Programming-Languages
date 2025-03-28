@@ -5,8 +5,9 @@
  * @version 1/20/25, updated 3/10/25
  */
 public class Assignment extends Statement {
-    private Token vbl;
-    private Expression expr;
+    // Fields at top with spacing
+    private final Token        targetVar;    // renamed from vbl
+    private final Expression  valueExpr;    // renamed from expr
 
     /**
      * Reads in a assignment statement from the specified TokenStream.
@@ -14,33 +15,36 @@ public class Assignment extends Statement {
      * @param input the stream to be read from
      */
     public Assignment(TokenStream input) throws Exception {
-        this.vbl = input.next();
-        if (this.vbl.getType() != Token.Type.IDENTIFIER) {
-            throw new Exception("SYNTAX ERROR: Illegal lhs of assignment statement (" + this.vbl + ")");
+        this.targetVar = input.next();
+        if (this.targetVar.getType() != Token.Type.IDENTIFIER) {
+            throw new Exception("SYNTAX ERROR: Illegal lhs of assignment statement (" + this.targetVar + ")");
         }
 
         if (!input.next().toString().equals("=")) {
             throw new Exception("SYNTAX ERROR: Malformed assignment statement (expecting '=')");
         }
 
-        this.expr = new Expression(input);
+        this.valueExpr = new Expression(input);
     }
 
-    /**
-     * Executes the current assignment statement.
-     */
+    // Execute method first
+    @Override
     public void execute() throws Exception {
-        // check if the variable is a function since variable and functions cannot have
-        // the same name
-        if (Interpreter.MEMORY.isFunctionDeclared(this.vbl.toString())) {
-            throw new Exception("RUNTIME ERROR: Cannot assign to variable '" + this.vbl
-                    + "', a function with this name already exists");
-        }
+        validateAssignment();
+        storeValue();
+    }
 
-        if (!Interpreter.MEMORY.isDeclared(this.vbl)) {
-            Interpreter.MEMORY.declareVariable(this.vbl);
+    private void validateAssignment() throws Exception {
+        if (Interpreter.MEMORY.isFunctionDeclared(this.targetVar.toString())) {
+            throw new Exception("RUNTIME ERROR: Cannot assign to '" + this.targetVar + "' - name exists as function");
         }
-        Interpreter.MEMORY.storeValue(this.vbl, this.expr.evaluate());
+    }
+
+    private void storeValue() throws Exception {
+        if (!Interpreter.MEMORY.isDeclared(this.targetVar)) {
+            Interpreter.MEMORY.declareVariable(this.targetVar);
+        }
+        Interpreter.MEMORY.storeValue(this.targetVar, this.valueExpr.evaluate());
     }
 
     /**
@@ -49,6 +53,6 @@ public class Assignment extends Statement {
      * @return the String representation of this statement
      */
     public String toString() {
-        return this.vbl + " = " + this.expr;
+        return this.targetVar + " = " + this.valueExpr;
     }
 }

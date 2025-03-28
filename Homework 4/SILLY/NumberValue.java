@@ -5,7 +5,7 @@
  */
 public class NumberValue implements DataValue {
 
-    protected Double value;
+    private final Double numericValue;    // renamed from numValue
 
     /**
      * Constructs a default number value (0).
@@ -19,34 +19,29 @@ public class NumberValue implements DataValue {
      *   @param num the number being stored
      */
     public NumberValue(double num) {
-        this.value = (Double) num;
+        this.numericValue = (Double) num;
     }
 
-    /**
-     * Accesses the stored number value.
-     *   @return the number value (as an Object)
-     */
+    @Override
     public Object getValue() {
-        return this.value;
+        return this.numericValue;
     }
 
-    /**
-     * Identifies the actual type of the value.
-     *   @return Token.Type.NUMBER
-     */
+    @Override
     public DataValue.Type getType() {
         return DataValue.Type.NUMBER;
     }
 
-    /**
-     * Converts a number value to a String.
-     *   @return a String representation of a number value
-     */
+    @Override
     public String toString() {
-        if (this.value == Math.round(this.value)) {
-            return "" + (int) (this.value.doubleValue());
+        if (isInteger(this.numericValue)) {
+            return String.valueOf(this.numericValue.intValue());
         }
-        return "" + this.value;
+        return String.valueOf(this.numericValue);
+    }
+
+    private boolean isInteger(double num) {
+        return num == Math.floor(num);
     }
 
     /**

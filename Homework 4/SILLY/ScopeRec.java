@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that represents a scope record in the program execution.
@@ -7,55 +8,31 @@ import java.util.HashMap;
  * @version 1/20/25, updated 3/10/25
  */
 public class ScopeRec {
-    private HashMap<Token, DataValue> map;
-    private ScopeRec parentScope;
+    private final Map<Token, DataValue> map;    // change back from symbolTable
+    private final ScopeRec parentScope;         // change back from enclosingScope
 
-    /**
-     * Constructs an empty scope record.
-     * 
-     * @param parent a reference to the parent scope record (null if no parent)
-     */
-    public ScopeRec(ScopeRec parent) {
-        this.map = new HashMap<Token, DataValue>();
-        this.parentScope = parent;
+    // Getters first
+    public ScopeRec getParentScope() {
+        return this.parentScope;
     }
 
-    /**
-     * Determines if a variable is declared in this scope record.
-     * 
-     * @param variable the variable to check
-     * @return true if variable is declared (i.e., a key in map); else, false
-     */
-    public boolean declaredInScope(Token variable) {
+    // Query methods next
+    public boolean declaredInScope(Token variable) {  // change back from hasSymbol
         return this.map.containsKey(variable);
     }
 
-    /**
-     * Determines the value associated with a variable in this scope record.
-     * 
-     * @param variable the variable to look up
-     * @return the value associated with that variable (null if not found)
-     */
-    public DataValue lookupInScope(Token variable) {
-        return this.map.get(variable);
+    public DataValue lookupInScope(Token symbol) {
+        return this.map.get(symbol);
     }
 
-    /**
-     * Stores a variable & value in this scope record.
-     * 
-     * @param variable the variable name
-     * @param val      the value to be stored under that name
-     */
-    public void storeInScope(Token variable, DataValue val) {
+    // Mutator methods last
+    public void storeInScope(Token variable, DataValue val) {  // change back from defineSymbol
         this.map.put(variable, val);
     }
 
-    /**
-     * Accesses the parent scope record.
-     * 
-     * @return the parent scope record (or null if no parent)
-     */
-    public ScopeRec getParentScope() {
-        return this.parentScope;
+    // Constructor at bottom
+    public ScopeRec(ScopeRec parent) {
+        this.map = new HashMap<Token, DataValue>();
+        this.parentScope = parent;
     }
 }

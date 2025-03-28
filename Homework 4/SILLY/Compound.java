@@ -7,42 +7,23 @@ import java.util.ArrayList;
  * @version 1/20/25, updated 3/10/25
  */
 public class Compound extends Statement {
-    private ArrayList<Statement> stmts;
+    // =========== Fields ===========
+    private final ArrayList<Statement> statements;    // renamed from stmts
 
-    /**
-     * Reads in a compound statement from the specified stream
-     *
-     * @param input the stream to be read from
-     */
+    // =========== Constructor ===========
     public Compound(TokenStream input) throws Exception {
-        if (!input.next().toString().equals("{")) {
-            throw new Exception("SYNTAX ERROR: Malformed compound statement");
-        }
-
-        this.stmts = new ArrayList<Statement>();
-        while (!input.lookAhead().toString().equals("}")) {
-            this.stmts.add(Statement.getStatement(input));
-        }
-        input.next();
+        validateOpenBrace(input);
+        this.statements = new ArrayList<Statement>();
+        parseStatements(input);
+        validateCloseBrace(input);
     }
 
-    /**
-     * Executes a compound statement by creating a new scope and executing all
-     * contained statements sequentially.
-     * 
-     * @throws Return.ReturnException If a return statement is executed within the
-     *                                compound block
-     * @throws Exception              If any other exception occurs during statement
-     *                                execution
-     */
+    // =========== Core Methods ===========
+    @Override
     public void execute() throws Exception {
         Interpreter.MEMORY.beginNestedScope();
-
         try {
-            for (int i = 0; i < this.stmts.size(); i++) {
-                Statement stmt = this.stmts.get(i);
-                stmt.execute();
-            }
+            executeStatements();
         } catch (Return.ReturnException re) {
             Interpreter.MEMORY.endCurrentScope();
             throw re;
@@ -50,20 +31,38 @@ public class Compound extends Statement {
             Interpreter.MEMORY.endCurrentScope();
             throw e;
         }
-
         Interpreter.MEMORY.endCurrentScope();
     }
 
-    /**
-     * Converts the current compound statement into a String.
-     *
-     * @return the String representation of this statement
-     */
+    @Override
     public String toString() {
-        String str = "{\n";
-        for (Statement stmt : this.stmts) {
-            str += "  " + stmt + "\n";
+        StringBuilder sb = new StringBuilder("{\n");
+        for (Statement stmt : this.statements) {
+            sb.append("  ").append(stmt).append("\n");
         }
-        return str + "}";
+        return sb.append("}").toString();
+    }
+
+    // =========== Helper Methods ===========
+    private void validateOpenBrace(TokenStream input) throws Exception {
+        if (!input.next().toString().equals("{")) {
+            throw new Exception("SYNTAX ERROR: Malformed compound statement");
+        }
+    }
+
+    private void validateCloseBrace(TokenStream input) throws Exception {
+        input.next();  // consume closing brace
+    }
+
+    private void parseStatements(TokenStream input) throws Exception {
+        while (!input.lookAhead().toString().equals("}")) {
+            this.statements.add(Statement.getStatement(input));
+        }
+    }
+
+    private void executeStatements() throws Exception {
+        for (Statement stmt : this.statements) {
+            stmt.execute();
+        }
     }
 }

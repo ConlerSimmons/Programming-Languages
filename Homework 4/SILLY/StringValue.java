@@ -10,6 +10,16 @@ import java.util.List;
 public class StringValue extends ListValue {
 
     /**
+     * Accesses the stored string value.
+     * 
+     * @return the string value (as an Object)
+     */
+    @Override
+    public DataValue.Type getType() {
+        return DataValue.Type.STRING;
+    }
+
+    /**
      * Constructs a default string value.
      */
     public StringValue() {
@@ -37,16 +47,6 @@ public class StringValue extends ListValue {
             charValues.add(new CharValue(c));
         }
         return charValues;
-    }
-
-    /**
-     * Accesses the stored string value.
-     * 
-     * @return the string value (as an Object)
-     */
-    @Override
-    public DataValue.Type getType() {
-        return DataValue.Type.STRING;
     }
 
     /**

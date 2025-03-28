@@ -5,7 +5,12 @@
  * @version 1/20/25
  */
 public class Print extends Statement {
-    private Expression expr;
+    private final Expression displayExpr;    // renamed from outputExpr
+
+    @Override
+    public void execute() throws Exception {
+        System.out.println(displayExpr.evaluate().toString());
+    }
 
     /**
      * Reads in a print statement from the specified TokenStream.
@@ -14,17 +19,9 @@ public class Print extends Statement {
      */
     public Print(TokenStream input) throws Exception {
         if (!input.next().toString().equals("print")) {
-            throw new Exception("SYNTAX ERROR: Malformed print statement");
+            throw new Exception("SYNTAX ERROR: Invalid print statement");
         }
-
-        this.expr = new Expression(input);
-    }
-
-    /**
-     * Executes the current print statement.
-     */
-    public void execute() throws Exception {
-        System.out.println(this.expr.evaluate().toString());
+        this.displayExpr = new Expression(input);
     }
 
     /**
@@ -33,6 +30,6 @@ public class Print extends Statement {
      * @return the String representation of this statement
      */
     public String toString() {
-        return "print " + this.expr;
+        return "print " + this.displayExpr;
     }
 }

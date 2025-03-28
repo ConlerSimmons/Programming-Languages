@@ -6,8 +6,8 @@
  */
 public class Repeat extends Statement {
 
-    private Expression expr;
-    private Compound body;
+    private final Expression iterationExpr;  // renamed from expr
+    private final Compound loopBody;         // renamed from body
 
     /**
      * Reads in a repeat statement from the specified stream
@@ -18,8 +18,8 @@ public class Repeat extends Statement {
         if (!input.next().toString().equals("repeat")) {
             throw new Exception("SYNTAX ERROR: Malnourished repeat statement");
         }
-        this.expr = new Expression(input);
-        this.body = new Compound(input);
+        this.iterationExpr = new Expression(input);
+        this.loopBody = new Compound(input);
     }
 
     /**
@@ -27,30 +27,43 @@ public class Repeat extends Statement {
      */
     @Override
     public void execute() throws Exception {
-        DataValue eVal = this.expr.evaluate();
-        if (eVal.getType() != DataValue.Type.NUMBER) {
-            throw new Exception(
-                    "RUNTIME ERROR: repeat statement requires a number.");
-        }
+        int iterations = validateAndGetIterationCount();
+        executeLoop(iterations);
+    }
 
-        Double numVal = (Double) eVal.getValue();
-        if (numVal % 1 != 0) {
-            throw new Exception(
-                    "RUNTIME ERROR: repeat statement requires an integer.");
-        }
+    private int validateAndGetIterationCount() throws Exception {
+        DataValue countValue = this.iterationExpr.evaluate();
+        validateNumericType(countValue);
+        Double count = (Double) countValue.getValue();
+        validateIntegerValue(count);
+        return count.intValue();
+    }
 
-        int count = numVal.intValue();
-        if (count < 0) {
-            throw new Exception(
-                    "RUNTIME ERROR: repeat statement requires a non-negative number.");
-        }
-
+    private void executeLoop(int count) throws Exception {
         for (int i = 0; i < count; i++) {
             try {
-                this.body.execute();
+                this.loopBody.execute();
             } catch (Return.ReturnException re) {
                 throw re;
             }
+        }
+    }
+
+    private void validateNumericType(DataValue value) throws Exception {
+        if (value.getType() != DataValue.Type.NUMBER) {
+            throw new Exception(
+                    "RUNTIME ERROR: repeat statement requires a number.");
+        }
+    }
+
+    private void validateIntegerValue(Double value) throws Exception {
+        if (value % 1 != 0) {
+            throw new Exception(
+                    "RUNTIME ERROR: repeat statement requires an integer.");
+        }
+        if (value < 0) {
+            throw new Exception(
+                    "RUNTIME ERROR: repeat statement requires a non-negative number.");
         }
     }
 
@@ -61,6 +74,6 @@ public class Repeat extends Statement {
      */
     @Override
     public String toString() {
-        return "repeat " + this.expr + " " + this.body;
+        return "repeat " + this.iterationExpr + " " + this.loopBody;
     }
 }

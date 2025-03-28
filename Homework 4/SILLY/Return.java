@@ -5,12 +5,13 @@
  * @version 3/10/25
  */
 public class Return extends Statement {
-
-    private Expression expr;
-
-    // a token that represents the return value of a function
+    // ========== Constants ==========
     public static final Token RETURN_VALUE_TOKEN = new Token("__return__");
 
+    // ========== Fields ==========
+    private final Expression returnExpr;
+
+    // ========== Exception Class ==========
     public static class ReturnException extends Exception {
         private final DataValue returnValue;
 
@@ -33,17 +34,13 @@ public class Return extends Statement {
         if (!input.next().toString().equals("return")) {
             throw new Exception("SYNTAX ERROR: Malformed return statement");
         }
-        this.expr = new Expression(input);
+        this.returnExpr = new Expression(input);
     }
 
-    /**
-     * Executes the current return statement.
-     * Throws a ReturnException to signal early termination of the function.
-     */
+    // ========== Core Methods ==========
     @Override
     public void execute() throws Exception {
-        DataValue value = this.expr.evaluate();
-        throw new ReturnException(value);
+        throw new ReturnException(this.returnExpr.evaluate());
     }
 
     /**
@@ -53,6 +50,6 @@ public class Return extends Statement {
      */
     @Override
     public String toString() {
-        return "return " + this.expr;
+        return "return " + this.returnExpr;
     }
 }

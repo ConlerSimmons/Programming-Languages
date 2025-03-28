@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -8,10 +9,11 @@ import java.util.Scanner;
  * @version 1/20/25
  */
 public class Interpreter {
+    // ========== Static Fields ==========
+    public static final MemorySpace MEMORY = new MemorySpace();
+    private static final Map<String, FunctionDecl> functions = new HashMap<>();
 
-    public static MemorySpace MEMORY = new MemorySpace();
-    private static HashMap<String, FunctionDecl> functions = new HashMap<>();
-
+    // ========== Function Management ==========
     /**
      * Registers a function declaration in the interpreter.
      * 
@@ -42,6 +44,7 @@ public class Interpreter {
         return functions.containsKey(name);
     }
 
+    // ========== Main Program ==========
     public static void main(String[] args) throws Exception {
 
         System.out.print(

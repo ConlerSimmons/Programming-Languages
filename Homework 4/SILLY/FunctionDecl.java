@@ -7,9 +7,9 @@ import java.util.ArrayList;
  * @version 3/10/25
  */
 public class FunctionDecl extends Statement {
-    private Token name;
-    private ArrayList<Token> parameters;
-    private Compound body;
+    private final Token functionIdentifier;           // renamed from name
+    private final ArrayList<Token> formalParams;      // renamed from parameters
+    private final Compound functionImplementation;    // renamed from body
 
     /**
      * Reads in a function declaration from the specified stream
@@ -23,8 +23,8 @@ public class FunctionDecl extends Statement {
             throw new Exception("SYNTAX ERROR: Malnourished function declaration");
         }
 
-        this.name = input.next();
-        if (this.name.getType() != Token.Type.IDENTIFIER) {
+        this.functionIdentifier = input.next();
+        if (this.functionIdentifier.getType() != Token.Type.IDENTIFIER) {
             throw new Exception("SYNTAX ERROR: Function name must be an identifier");
         }
 
@@ -32,17 +32,17 @@ public class FunctionDecl extends Statement {
             throw new Exception("SYNTAX ERROR: Expected '(' after function name");
         }
 
-        this.parameters = new ArrayList<Token>();
+        this.formalParams = new ArrayList<Token>();
         while (!input.lookAhead().toString().equals(")")) {
             Token param = input.next();
             if (param.getType() != Token.Type.IDENTIFIER) {
                 throw new Exception("SYNTAX ERROR: Function parameter must be an identifier");
             }
-            this.parameters.add(param);
+            this.formalParams.add(param);
         }
 
         input.next();
-        this.body = new Compound(input);
+        this.functionImplementation = new Compound(input);
     }
 
     /**
@@ -51,7 +51,7 @@ public class FunctionDecl extends Statement {
      * @return the name token of the function
      */
     public Token getName() {
-        return this.name;
+        return this.functionIdentifier;
     }
 
     /**
@@ -60,7 +60,7 @@ public class FunctionDecl extends Statement {
      * @return the list of parameters
      */
     public ArrayList<Token> getParameters() {
-        return this.parameters;
+        return this.formalParams;
     }
 
     /**
@@ -69,7 +69,7 @@ public class FunctionDecl extends Statement {
      * @return the compound statement representing the function body
      */
     public Compound getBody() {
-        return this.body;
+        return this.functionImplementation;
     }
 
     /**
@@ -77,21 +77,24 @@ public class FunctionDecl extends Statement {
      */
     @Override
     public void execute() throws Exception {
-        // a check is performed to see if there is a variable with this name already
-        if (Interpreter.MEMORY.isDeclared(this.name)) {
-            throw new Exception("RUNTIME ERROR: Cannot declare function '" + this.name
-                    + "', a variable with this name already exists");
-        }
+        validateDeclaration();
+        registerFunction();
+    }
 
-        // a check is performed to see if there is a function with this name already
-        if (Interpreter.MEMORY.isFunctionDeclared(this.name.toString())) {
-            throw new Exception("RUNTIME ERROR: Function '" + this.name + "' is already declared");
+    private void validateDeclaration() throws Exception {
+        if (Interpreter.MEMORY.isDeclared(this.functionIdentifier)) {
+            throw new Exception("RUNTIME ERROR: Cannot declare function - name exists as variable");
         }
+        if (Interpreter.MEMORY.isFunctionDeclared(this.functionIdentifier.toString())) {
+            throw new Exception("RUNTIME ERROR: Function already declared");
+        }
+    }
 
-        Interpreter.registerFunction(this.name.toString(), this);
-        Interpreter.MEMORY.storeFunction(this.name.toString(), this);
-        Interpreter.MEMORY.declareVariable(this.name);
-        Interpreter.MEMORY.storeValue(this.name, new BooleanValue(true));
+    private void registerFunction() {
+        Interpreter.registerFunction(this.functionIdentifier.toString(), this);
+        Interpreter.MEMORY.storeFunction(this.functionIdentifier.toString(), this);
+        Interpreter.MEMORY.declareVariable(this.functionIdentifier);
+        Interpreter.MEMORY.storeValue(this.functionIdentifier, new BooleanValue(true));
     }
 
     /**
@@ -101,15 +104,15 @@ public class FunctionDecl extends Statement {
      */
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder("func " + this.name + "(");
-        for (int i = 0; i < parameters.size(); i++) {
+        StringBuilder result = new StringBuilder("func " + this.functionIdentifier + "(");
+        for (int i = 0; i < formalParams.size(); i++) {
             if (i > 0) {
                 result.append(" ");
             }
-            result.append(parameters.get(i));
+            result.append(formalParams.get(i));
         }
         result.append(") ");
-        result.append(this.body.toString());
+        result.append(this.functionImplementation.toString());
         return result.toString();
     }
 }

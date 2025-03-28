@@ -6,9 +6,9 @@
  */
 public class If extends Statement {
 
-    private Expression test;
-    private Compound ifBody;
-    private Compound elseBody;
+    private final Expression condition;     // renamed from test
+    private final Compound   thenBlock;     // renamed from ifBody
+    private final Compound   elseBlock;     // renamed from elseBody
 
     /**
      * Reads in an if statement from the specified stream
@@ -19,37 +19,43 @@ public class If extends Statement {
         if (!input.next().toString().equals("if")) {
             throw new Exception("SYNTAX ERROR: Malformed if statement");
         }
-        this.test = new Expression(input);
-        this.ifBody = new Compound(input);
+        this.condition = new Expression(input);
+        this.thenBlock = new Compound(input);
 
         if (!input.next().toString().equals("else")) {
             throw new Exception("SYNTAX ERROR: Malformed if statement");
         }
 
-        this.elseBody = new Compound(input);
+        this.elseBlock = new Compound(input);
     }
 
-    /**
-     * Executes the current if statement.
-     */
+    @Override
     public void execute() throws Exception {
+        DataValue result = evaluateCondition();
+        executeAppropriateBlock(result);
+    }
 
-        DataValue test = this.test.evaluate();
+    private DataValue evaluateCondition() throws Exception {
+        DataValue result = this.condition.evaluate();
+        validateBooleanType(result);
+        return result;
+    }
 
-        if (test.getType() != DataValue.Type.BOOLEAN) {
-            throw new Exception("RUNTIME ERROR: If statement requires Boolean test.");
+    private void validateBooleanType(DataValue value) throws Exception {
+        if (value.getType() != DataValue.Type.BOOLEAN) {
+            throw new Exception("RUNTIME ERROR: If statement requires Boolean condition");
         }
+    }
 
+    private void executeAppropriateBlock(DataValue result) throws Exception {
         try {
-            if (((Boolean) test.getValue())) {
-                this.ifBody.execute();
+            if ((Boolean)result.getValue()) {
+                this.thenBlock.execute();
             } else {
-                this.elseBody.execute();
+                this.elseBlock.execute();
             }
         } catch (Return.ReturnException re) {
             throw re;
-        } catch (Exception e) {
-            throw e;
         }
     }
 
@@ -59,6 +65,6 @@ public class If extends Statement {
      * @return the String representation of this statement
      */
     public String toString() {
-        return "if " + this.test + " " + this.ifBody + "\nelse " + this.elseBody;
+        return "if " + this.condition + " " + this.thenBlock + "\nelse " + this.elseBlock;
     }
 }

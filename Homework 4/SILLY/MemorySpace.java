@@ -9,47 +9,40 @@ import java.util.Map;
  * @version 1/20/25, updated 3/10/25
  */
 public class MemorySpace {
-    private Stack<ScopeRec> runtimeStack; // represents the nested scopes
-    private Map<String, FunctionDecl> functionMap; // map that stores the name of the function and the function
-                                                   // declaration
+    // ========== Fields ==========
+    private final Stack<ScopeRec> scopeStack;
+    private final Map<String, FunctionDecl> functionTable;
 
     /**
      * Constructs a memory space with a single (global) scope record.
      */
     public MemorySpace() {
-        this.runtimeStack = new Stack<ScopeRec>();
+        this.scopeStack = new Stack<ScopeRec>();
         this.beginFunctionScope();
-        this.functionMap = new HashMap<String, FunctionDecl>();
+        this.functionTable = new HashMap<String, FunctionDecl>();
     }
 
-    /**
-     * Adds a new scope to the top of the runtime stack (linked to previous top).
-     */
+    // ========== Scope Management ==========
     public void beginNestedScope() {
-        this.runtimeStack.push(new ScopeRec(this.runtimeStack.peek()));
+        this.scopeStack.push(new ScopeRec(this.scopeStack.peek()));
     }
 
-    /**
-     * Adds a new block scope to the top of the runtime stack.
-     */
     public void beginFunctionScope() {
-        this.runtimeStack.push(new ScopeRec(null));
+        this.scopeStack.push(new ScopeRec(null));
     }
 
-    /**
-     * Removes the current scope from the top of the runtime stack.
-     */
     public void endCurrentScope() {
-        this.runtimeStack.pop();
+        this.scopeStack.pop();
     }
 
+    // ========== Variable Operations ==========
     /**
      * Declares a variable (without storing an actual value).
      *
      * @param variable the variable to be declared
      */
     public void declareVariable(Token variable) {
-        this.runtimeStack.peek().storeInScope(variable, null);
+        this.scopeStack.peek().storeInScope(variable, null);
     }
 
     /**
@@ -82,22 +75,7 @@ public class MemorySpace {
         return this.findScopeinStack(variable).lookupInScope(variable);
     }
 
-    /////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Locates the Scope in the stackSegment that contains the specified variable.
-     *
-     * @param variable the variable being searched for
-     * @return the Scope containing that variable
-     */
-    private ScopeRec findScopeinStack(Token variable) {
-        ScopeRec stepper = this.runtimeStack.peek();
-        while (stepper != null && !stepper.declaredInScope(variable)) {
-            stepper = stepper.getParentScope();
-        }
-        return stepper;
-    }
-
+    // ========== Function Operations ==========
     /**
      * Stores a function declaration in the function map.
      * 
@@ -105,7 +83,7 @@ public class MemorySpace {
      * @param functionDecl the function declaration object
      */
     public void storeFunction(String functionName, FunctionDecl functionDecl) {
-        functionMap.put(functionName, functionDecl);
+        functionTable.put(functionName, functionDecl);
     }
 
     /**
@@ -116,7 +94,7 @@ public class MemorySpace {
      *         found
      */
     public FunctionDecl lookupFunction(String functionName) {
-        return functionMap.get(functionName);
+        return functionTable.get(functionName);
     }
 
     /**
@@ -126,6 +104,21 @@ public class MemorySpace {
      * @return true if the function is declared; else, false
      */
     public boolean isFunctionDeclared(String functionName) {
-        return functionMap.containsKey(functionName);
+        return functionTable.containsKey(functionName);
+    }
+
+    // ========== Private Helpers ==========
+    /**
+     * Locates the Scope in the stackSegment that contains the specified variable.
+     *
+     * @param variable the variable being searched for
+     * @return the Scope containing that variable
+     */
+    private ScopeRec findScopeinStack(Token variable) {
+        ScopeRec stepper = this.scopeStack.peek();
+        while (stepper != null && !stepper.declaredInScope(variable)) {
+            stepper = stepper.getParentScope();
+        }
+        return stepper;
     }
 }
