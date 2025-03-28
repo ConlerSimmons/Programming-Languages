@@ -11,6 +11,13 @@ public class Assignment extends Statement {
     private final Expression    valueExpr;      // Expression to evaluate
 
     // =========================== Constructor ==============================
+    /**
+     * Creates an assignment statement by parsing input from the token stream.
+     * Expects an identifier followed by '=' and an expression.
+     *
+     * @param input TokenStream to read from
+     * @throws Exception if syntax is invalid
+     */
     public Assignment(TokenStream input) throws Exception {
         this.targetVar = input.next();
         if (this.targetVar.getType() != Token.Type.IDENTIFIER) {
@@ -25,6 +32,12 @@ public class Assignment extends Statement {
     }
 
     // ========================== Core Methods =============================
+    /**
+     * Executes the assignment by evaluating the expression and storing the result.
+     * Validates that assignment target is not a function name.
+     *
+     * @throws Exception if assignment is invalid or evaluation fails
+     */
     @Override
     public void execute() throws Exception {
         validateAssignment();

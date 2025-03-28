@@ -6,12 +6,30 @@
  */
 public abstract class Statement {
 
-    // ==================== Abstract Methods ====================
+    /**
+     * Abstract method to execute the statement's behavior.
+     * Each derived class must implement their specific execution logic.
+     * 
+     * @throws Exception if execution fails due to syntax or runtime errors
+     */
     public abstract void execute() throws Exception;
+
+    /**
+     * Abstract method to provide string representation of the statement.
+     * Used for debugging and display purposes.
+     * 
+     * @return String representation of the statement
+     */
     public abstract String toString();
 
-
-    // ==================== Factory Method ====================
+    /**
+     * Factory method to create appropriate Statement subclass.
+     * Examines next token to determine statement type.
+     * 
+     * @param input TokenStream to read from
+     * @return New Statement object of appropriate type
+     * @throws Exception if statement syntax is invalid
+     */
     public static Statement getStatement(TokenStream input) throws Exception {
         Token first = input.lookAhead();
         

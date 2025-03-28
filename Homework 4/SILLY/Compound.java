@@ -13,6 +13,13 @@ public class Compound extends Statement {
 
 
     // ======================= Constructor =========================
+    /**
+     * Parses and creates a compound statement from the input stream.
+     * Validates opening brace, reads statements until closing brace.
+     *
+     * @param input TokenStream to read from
+     * @throws Exception if compound statement syntax is invalid
+     */
     public Compound(TokenStream input) throws Exception {
         validateOpenBrace(input);
         this.statements = new ArrayList<Statement>();
@@ -48,6 +55,12 @@ public class Compound extends Statement {
 
 
     // ==================== Helper Methods =======================
+    /**
+     * Validates that the next token is an opening brace.
+     *
+     * @param input TokenStream to read from
+     * @throws Exception if opening brace is missing
+     */
     private void validateOpenBrace(TokenStream input) throws Exception {
         if (!input.next().toString().equals("{")) {
             throw new Exception("SYNTAX ERROR: Malformed compound statement");
@@ -64,6 +77,12 @@ public class Compound extends Statement {
         }
     }
 
+    /**
+     * Reads and executes all statements in the compound block.
+     * Provides scope for variable declarations.
+     *
+     * @throws Exception if any statement execution fails
+     */
     private void executeStatements() throws Exception {
         for (Statement stmt : this.statements) {
             stmt.execute();

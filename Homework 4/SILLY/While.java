@@ -22,6 +22,12 @@ public class While extends Statement {
 
 
     // ============================ Main Operations ============================
+    /**
+     * Executes a while loop by repeatedly evaluating condition and executing body.
+     * Continues until condition becomes false or return statement is encountered.
+     * 
+     * @throws Exception if condition evaluation or body execution fails
+     */
     @Override
     public void execute() throws Exception {
         for (;;) {  // alternative to while(true)
@@ -41,16 +47,34 @@ public class While extends Statement {
 
 
     // ============================ Helper Methods ===========================
+    /**
+     * Validates that loop condition evaluates to a boolean.
+     * 
+     * @param result DataValue to validate
+     * @throws Exception if result is not a boolean value
+     */
     private void validateBooleanCondition(DataValue result) throws Exception {
         if (result.getType() != DataValue.Type.BOOLEAN) {
             throw new Exception("RUNTIME ERROR: Loop requires boolean condition");
         }
     }
 
+    /**
+     * Extracts boolean value from DataValue result.
+     * 
+     * @param result DataValue containing boolean
+     * @return extracted boolean value
+     */
     private boolean getBooleanValue(DataValue result) {
         return (Boolean) result.getValue();
     }
 
+    /**
+     * Executes a single iteration of the loop body.
+     * Propagates any return exceptions from the body.
+     * 
+     * @throws Exception if body execution fails
+     */
     private void executeLoopBody() throws Exception {
         try {
             this.loopBlock.execute();

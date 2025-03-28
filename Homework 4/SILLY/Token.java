@@ -41,9 +41,10 @@ public class Token {
     }
 
     /**
-     * Identifies what type of token it is.
-     * 
-     * @return the token type (e.g., Token.Type.IDENTIFIER)
+     * Analyzes token string to determine its syntactic type.
+     * Handles numbers, delimiters, keywords, identifiers, and literals.
+     *
+     * @return Type enum indicating token's syntactic category
      */
     public Token.Type getType() {
         if (Character.isDigit(this.strVal.charAt(0)) ||
@@ -90,10 +91,11 @@ public class Token {
     }
 
     /**
-     * Determines when two tokens are identical.
-     * 
-     * @param other the other token being compared
-     * @return whether the two tokens represent the same string value
+     * Compares token with another object for equality.
+     * Two tokens are equal if they have the same string value.
+     *
+     * @param other Object to compare with
+     * @return true if tokens are equal, false otherwise
      */
     public boolean equals(Object other) {
         return this.strVal.equals(((Token) other).strVal);

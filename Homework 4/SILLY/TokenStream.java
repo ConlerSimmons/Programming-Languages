@@ -16,11 +16,21 @@ public class TokenStream {
 
 
     // =============================== Constructors ==============================
+    /**
+     * Constructs a TokenStream for reading from standard input.
+     * Initializes empty buffer and input scanner.
+     */
     public TokenStream() {
         this.input = new Scanner(System.in);
         this.buffer = "";
     }
     
+    /**
+     * Constructs a TokenStream for reading from a file.
+     * 
+     * @param filename path to the source file
+     * @throws java.io.FileNotFoundException if file cannot be opened
+     */
     public TokenStream(String filename) throws java.io.FileNotFoundException {
         this.input = new Scanner(new File(filename));
         this.buffer = "";
@@ -28,6 +38,12 @@ public class TokenStream {
 
 
     // ============================= Token Processing ============================
+    /**
+     * Looks at next token without consuming it.
+     * Handles string literals, char literals and delimiters.
+     * 
+     * @return Next token in stream
+     */
     public Token lookAhead() {
         if (this.nextToken == null) {
             if (this.buffer.equals("") && this.input.hasNext()) {
@@ -54,6 +70,11 @@ public class TokenStream {
         return this.nextToken;
     }
 
+    /**
+     * Reads and returns next token, removing it from stream.
+     * 
+     * @return Token that was read
+     */
     public Token next() {
         Token safe = this.lookAhead();
         this.nextToken = null;
@@ -63,6 +84,11 @@ public class TokenStream {
      
 
     // ============================== Stream State ==============================
+    /**
+     * Checks if more tokens are available.
+     * 
+     * @return true if more tokens can be read
+     */
     public boolean hasNext() {
         return (this.nextToken != null || !this.buffer.equals("") || this.input.hasNext());
     }

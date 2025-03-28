@@ -25,6 +25,13 @@ public class StringValue extends ListValue {
 
 
     // ============================= Core Methods ============================
+    /**
+     * Converts a string into a list of CharValue objects.
+     * Each character in the string becomes a CharValue in the list.
+     *
+     * @param str String to convert
+     * @return ArrayList of CharValues
+     */
     private static ArrayList<DataValue> createCharValueList(String str) {
         ArrayList<DataValue> charValues = new ArrayList<>();
         for (char c : str.toCharArray()) {
@@ -33,6 +40,12 @@ public class StringValue extends ListValue {
         return charValues;
     }
 
+    /**
+     * Converts the string value to its string representation.
+     * Concatenates all characters without any delimiters.
+     *
+     * @return String representation of the value
+     */
     @Override
     @SuppressWarnings("unchecked")
     public String toString() {

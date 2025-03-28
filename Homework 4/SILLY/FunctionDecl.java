@@ -21,6 +21,12 @@ public class FunctionDecl extends Statement {
 
 
     // =========================== Core Methods ============================
+    /**
+     * Executes the function declaration by registering it in memory.
+     * Validates function name is not already used.
+     *
+     * @throws Exception if function cannot be declared
+     */
     @Override
     public void execute() throws Exception {
         validateDeclaration();
@@ -60,9 +66,11 @@ public class FunctionDecl extends Statement {
     }
 
     /**
-     * Reads in a function declaration from the specified stream
-     * 
-     * @param input the stream to be read from
+     * Creates a function declaration by parsing name, parameters and body.
+     * Validates function syntax and parameter declarations.
+     *
+     * @param input TokenStream to read from
+     * @throws Exception if declaration syntax is invalid
      */
     public FunctionDecl(TokenStream input) throws Exception {
         // code block that ensures the function is declared correctly, is an identifier,

@@ -17,7 +17,29 @@ public interface DataValue extends Comparable<DataValue> {
     }
 
     // ============================== Core Operations ===============================
+    
+    /**
+     * Retrieves the wrapped value of this data type.
+     * 
+     * @return The underlying value object
+     */
     Object getValue();
+
+    /**
+     * Gets the SILLY type of this value.
+     * 
+     * @return One of the DataValue.Type enum values
+     */
     Type getType();
+
+    /**
+     * Compares this value with another DataValue.
+     * Used for implementing comparison operators.
+     * 
+     * @param other DataValue to compare with
+     * @return negative if less, 0 if equal, positive if greater
+     */
+    int compareTo(DataValue other);
+
     String toString();
 }

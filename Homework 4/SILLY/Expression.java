@@ -14,6 +14,13 @@ public class Expression {
 
 
     // ================================ Core Methods ================================
+    /**
+     * Creates an expression by parsing from the token stream.
+     * Handles parenthesized expressions, lists, and literals.
+     *
+     * @param input TokenStream to read from
+     * @throws Exception if expression syntax is invalid
+     */
     public Expression(TokenStream input) throws Exception {
         this.tok = input.next();
         
@@ -28,7 +35,13 @@ public class Expression {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Evaluates this expression to produce a DataValue.
+     * Handles simple values, lists, and function calls.
+     *
+     * @return DataValue result of evaluation
+     * @throws Exception if evaluation fails
+     */
     public DataValue evaluate() throws Exception {
         if (this.exprs == null) {
             return evaluateSimpleExpression();
@@ -121,6 +134,13 @@ public class Expression {
         throw new Exception("RUNTIME ERROR: Unknown expression format.");
     }
 
+    /**
+     * Evaluates math functions (+, *, /).
+     * Validates all arguments are numbers.
+     *
+     * @return NumberValue containing result
+     * @throws Exception if arity or types are invalid
+     */
     private DataValue evaluateMathFunction() throws Exception {
         if (this.exprs.size() < 2) {
             throw new Exception(
@@ -149,6 +169,13 @@ public class Expression {
         return new NumberValue(returnVal);
     }
 
+    /**
+     * Evaluates boolean functions (and, or, not, comparisons).
+     * Validates all arguments have correct types.
+     *
+     * @return BooleanValue containing result
+     * @throws Exception if arity or types are invalid
+     */
     private DataValue evaluateBooleanFunction() throws Exception {
         if (this.tok.toString().equals("not")) {
             if (this.exprs.size() != 1) {

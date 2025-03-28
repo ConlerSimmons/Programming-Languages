@@ -23,10 +23,18 @@ public class ListValue implements DataValue {
     }
 
     // ========== Constructors ==========
+    /**
+     * Constructs an empty list value.
+     */
     public ListValue() {
         this.value = new ArrayList<>();
     }
 
+    /**
+     * Constructs a list containing the provided values.
+     * 
+     * @param vals ArrayList of values to store in list
+     */
     public ListValue(ArrayList<DataValue> vals) {
         this();
         this.value.addAll(vals);

@@ -24,23 +24,36 @@ public class MemorySpace {
         this.functionTable = new HashMap<String, FunctionDecl>();
     }
 
+    /**
+     * Creates a new nested scope with access to parent scope.
+     * Used for compound statements.
+     */
     public void beginNestedScope() {
         this.scopeStack.push(new ScopeRec(this.scopeStack.peek()));
     }
 
+    /**
+     * Creates a new function scope with no parent access.
+     * Used for function bodies.
+     */
     public void beginFunctionScope() {
         this.scopeStack.push(new ScopeRec(null));
     }
 
+    /**
+     * Handles the end of current scope by removing it from stack.
+     * All variables declared in this scope become inaccessible.
+     */
     public void endCurrentScope() {
         this.scopeStack.pop();
     }
 
     // ============================ Memory Methods ===========================
     /**
-     * Declares a variable (without storing an actual value).
+     * Declares a variable in current scope.
+     * Initially stores null value.
      *
-     * @param variable the variable to be declared
+     * @param variable Token representing variable name
      */
     public void declareVariable(Token variable) {
         this.scopeStack.peek().storeInScope(variable, null);
@@ -57,10 +70,10 @@ public class MemorySpace {
     }
 
     /**
-     * Stores a value in memory.
+     * Stores a value for a variable in its declaring scope.
      *
-     * @param variable the variable to store the value for
-     * @param val      the value to be stored
+     * @param variable Token representing variable name
+     * @param val Value to store
      */
     public void storeValue(Token variable, DataValue val) {
         this.findScopeinStack(variable).storeInScope(variable, val);
@@ -110,10 +123,11 @@ public class MemorySpace {
 
     // ========== Private Helpers ==========
     /**
-     * Locates the Scope in the stackSegment that contains the specified variable.
-     *
-     * @param variable the variable being searched for
-     * @return the Scope containing that variable
+     * Searches scope stack for variable's declaring scope.
+     * Follows scope chain from current to global.
+     * 
+     * @param variable Token to search for
+     * @return ScopeRec containing variable or null if not found
      */
     private ScopeRec findScopeinStack(Token variable) {
         ScopeRec stepper = this.scopeStack.peek();
