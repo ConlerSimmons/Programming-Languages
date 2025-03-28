@@ -5,7 +5,7 @@ import java.util.List;
  * Class that represents a list value.
  * 
  * @author Dave Reed
- * @version 1/20/25
+ * @version 1/20/25, updated 3/27/25
  */
 public class ListValue implements DataValue {
     // ================================ Fields ================================

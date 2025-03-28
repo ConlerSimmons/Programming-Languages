@@ -2,7 +2,7 @@
  * Derived class that represents an assignment statement in the SILLY language.
  * 
  * @author Dave Reed & Conler Simmons
- * @version 1/20/25, updated 3/10/25
+ * @version 1/20/25, updated 3/27/25
  */
 public class Assignment extends Statement {
 

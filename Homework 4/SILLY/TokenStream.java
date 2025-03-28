@@ -4,8 +4,8 @@ import java.io.File;
 /**
  * Class for reading SILLY language tokens from an input stream, either
  * standard input or a file.
- *   @author Dave Reed
- *   @version 1/20/25
+ * @author Dave Reed
+ * @version 1/20/25, updated 3/27/25
  */
 public class TokenStream {
 

@@ -1,7 +1,7 @@
 /**
  * Class that represents a number value.
  *   @author Dave Reed
- *   @version 1/20/25
+ *   @version 1/20/25, updated 3/27/25
  */
 public class NumberValue implements DataValue {
 

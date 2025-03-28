@@ -2,7 +2,7 @@
  * Interface that defines the data types for the SILLY language.
  * 
  * @author Dave Reed
- * @version 1/20/25
+ * @version 1/20/25, updated 3/27/25
  */
 public interface DataValue extends Comparable<DataValue> {
     // ================================= Type System ================================

@@ -2,7 +2,7 @@
  * Class that represents a character value.
  * 
  * @author Conler Simmons
- * @version 2/4/25
+ * @version 3/27/25
  */
 public class CharValue implements DataValue {
 
