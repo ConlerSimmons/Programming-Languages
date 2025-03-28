@@ -5,31 +5,27 @@
  */
 public class NumberValue implements DataValue {
 
+    // ======================== Fields ========================
     private final Double numericValue;    // renamed from numValue
 
-    /**
-     * Constructs a default number value (0).
-     */
-    public NumberValue() {
-        this(0);
-    }
 
-    /**
-     * Constructs a number value.
-     *   @param num the number being stored
-     */
+    // ======================== Constructors ========================
+    public NumberValue()        { this(0); }
     public NumberValue(double num) {
         this.numericValue = (Double) num;
     }
 
-    @Override
-    public Object getValue() {
-        return this.numericValue;
-    }
 
+    // ======================== Interface Methods ========================
     @Override
-    public DataValue.Type getType() {
-        return DataValue.Type.NUMBER;
+    public Object getValue()          { return this.numericValue; }
+    
+    @Override
+    public DataValue.Type getType()   { return DataValue.Type.NUMBER; }
+    
+    @Override
+    public int compareTo(DataValue other) {
+        return ((Double) this.getValue()).compareTo((Double) other.getValue());
     }
 
     @Override
@@ -42,14 +38,5 @@ public class NumberValue implements DataValue {
 
     private boolean isInteger(double num) {
         return num == Math.floor(num);
-    }
-
-    /**
-     * Comparison method for NumberValues.
-     *   @param other the value being compared with
-     *   @return negative if <, 0 if ==, positive if >
-     */
-    public int compareTo(DataValue other) {
-        return ((Double) this.getValue()).compareTo((Double) other.getValue());
     }
 }

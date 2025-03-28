@@ -8,21 +8,27 @@ import java.util.List;
  * @version 1/20/25
  */
 public class Token {
-    // Keep all constant names exactly as they are used throughout
-    public static final List<String> delims = Arrays.asList("{", "}", "(", ")", "[", "]");
-    public static final List<String> booleans = Arrays.asList("true", "false");
-    public static final List<String> mathFuncs = Arrays.asList("+", "*", "/");
-    public static final List<String> boolFuncs = Arrays.asList("==", "!=", ">", ">=", "<", "<=",
-                                                              "and", "or", "not");
-    public static final List<String> seqFuncs = Arrays.asList("len", "get", "cat", "str");
-    public static final List<String> keywords = Arrays.asList("=", "print", "if", "else", "while",
-                                                            "repeat", "func", "return");
 
+    // ================================ Constants ================================
+    public static final List<String> delims        = Arrays.asList("{", "}", "(", ")", "[", "]");
+    public static final List<String> booleans      = Arrays.asList("true", "false");
+    public static final List<String> mathFuncs     = Arrays.asList("+", "*", "/");
+    public static final List<String> boolFuncs     = Arrays.asList("==", "!=", ">", ">=", "<", "<=",
+                                                                  "and", "or", "not");
+    public static final List<String> seqFuncs      = Arrays.asList("len", "get", "cat", "str");
+    public static final List<String> keywords      = Arrays.asList("=", "print", "if", "else", "while",
+                                                                  "repeat", "func", "return");
+
+
+    // ================================= Types ==================================
     public static enum Type {
-        UNKNOWN, DELIM, KEYWORD, IDENTIFIER, BOOL_FUNC, MATH_FUNC, SEQ_FUNC,
-        NUM_LITERAL, BOOL_LITERAL, CHAR_LITERAL, STR_LITERAL
+        UNKNOWN,     DELIM,       KEYWORD,     IDENTIFIER, 
+        BOOL_FUNC,   MATH_FUNC,   SEQ_FUNC,    NUM_LITERAL, 
+        BOOL_LITERAL,             CHAR_LITERAL, STR_LITERAL
     }
 
+
+    // =============================== Instance ================================
     private String strVal;
 
     /**

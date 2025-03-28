@@ -6,8 +6,9 @@
  */
 public class Repeat extends Statement {
 
-    private final Expression iterationExpr;  // renamed from expr
-    private final Compound loopBody;         // renamed from body
+    // =========================== Fields ===========================
+    private final Expression    iterationExpr;
+    private final Compound      loopBody;
 
     /**
      * Reads in a repeat statement from the specified stream
@@ -22,15 +23,14 @@ public class Repeat extends Statement {
         this.loopBody = new Compound(input);
     }
 
-    /**
-     * Executes the current repeat statement.
-     */
+    // ======================= Core Methods =======================
     @Override
     public void execute() throws Exception {
         int iterations = validateAndGetIterationCount();
         executeLoop(iterations);
     }
 
+    // ====================== Helper Methods ======================
     private int validateAndGetIterationCount() throws Exception {
         DataValue countValue = this.iterationExpr.evaluate();
         validateNumericType(countValue);
@@ -67,11 +67,7 @@ public class Repeat extends Statement {
         }
     }
 
-    /**
-     * Converts the current repeat statement to a string.
-     * 
-     * @return the String representation of this statement
-     */
+    // ==================== String Generation ====================
     @Override
     public String toString() {
         return "repeat " + this.iterationExpr + " " + this.loopBody;

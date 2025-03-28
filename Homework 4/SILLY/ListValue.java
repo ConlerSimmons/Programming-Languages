@@ -8,15 +8,14 @@ import java.util.List;
  * @version 1/20/25
  */
 public class ListValue implements DataValue {
-    // ========== Fields ==========
+    // ================================ Fields ================================
     protected List<DataValue> value;
 
-    // ========== Interface Methods ==========
+    // ============================= Core Methods ============================
     @Override
-    public Object getValue() { return this.value; }
-    
+    public Object getValue()         { return this.value; }
     @Override
-    public DataValue.Type getType() { return DataValue.Type.LIST; }
+    public DataValue.Type getType()  { return DataValue.Type.LIST; }
     
     @Override
     public int compareTo(DataValue other) {

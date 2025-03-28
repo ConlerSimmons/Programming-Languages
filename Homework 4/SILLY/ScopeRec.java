@@ -8,31 +8,22 @@ import java.util.Map;
  * @version 1/20/25, updated 3/10/25
  */
 public class ScopeRec {
-    private final Map<Token, DataValue> map;    // change back from symbolTable
-    private final ScopeRec parentScope;         // change back from enclosingScope
 
-    // Getters first
-    public ScopeRec getParentScope() {
-        return this.parentScope;
-    }
+    // ==================== Fields ====================
+    private final Map<Token, DataValue>    map;
+    private final ScopeRec                 parentScope;
 
-    // Query methods next
-    public boolean declaredInScope(Token variable) {  // change back from hasSymbol
-        return this.map.containsKey(variable);
-    }
 
-    public DataValue lookupInScope(Token symbol) {
-        return this.map.get(symbol);
-    }
-
-    // Mutator methods last
-    public void storeInScope(Token variable, DataValue val) {  // change back from defineSymbol
-        this.map.put(variable, val);
-    }
-
-    // Constructor at bottom
+    // ==================== Constructor ====================
     public ScopeRec(ScopeRec parent) {
         this.map = new HashMap<Token, DataValue>();
         this.parentScope = parent;
     }
+
+
+    // ==================== Access Methods ====================
+    public ScopeRec getParentScope()                           { return this.parentScope; }
+    public boolean declaredInScope(Token variable)             { return this.map.containsKey(variable); }
+    public DataValue lookupInScope(Token variable)             { return this.map.get(variable); }
+    public void storeInScope(Token variable, DataValue val)    { this.map.put(variable, val); }
 }

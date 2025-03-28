@@ -5,11 +5,9 @@
  * @version 3/10/25
  */
 public class Return extends Statement {
-    // ========== Constants ==========
-    public static final Token RETURN_VALUE_TOKEN = new Token("__return__");
-
-    // ========== Fields ==========
+    // ================================ Fields ================================
     private final Expression returnExpr;
+    public static final Token RETURN_VALUE_TOKEN = new Token("__return__");
 
     // ========== Exception Class ==========
     public static class ReturnException extends Exception {
@@ -37,7 +35,7 @@ public class Return extends Statement {
         this.returnExpr = new Expression(input);
     }
 
-    // ========== Core Methods ==========
+    // ============================= Core Methods ============================
     @Override
     public void execute() throws Exception {
         throw new ReturnException(this.returnExpr.evaluate());

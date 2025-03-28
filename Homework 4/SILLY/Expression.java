@@ -7,11 +7,13 @@ import java.util.ArrayList;
  * @version 1/20/25, updated 3/10/25
  */
 public class Expression {
-    // =========== Fields ===========
+
+    // =================================== Fields ===================================
     private Token tok;
     private ArrayList<Expression> exprs;
 
-    // =========== Core Methods ===========
+
+    // ================================ Core Methods ================================
     public Expression(TokenStream input) throws Exception {
         this.tok = input.next();
         
@@ -39,7 +41,8 @@ public class Expression {
         }
     }
 
-    // =========== Helper Methods ===========
+
+    // ============================== Helper Methods ================================
     private void parseParenthesizedExpression(TokenStream input) throws Exception {
         if (input.lookAhead().getType() != Token.Type.IDENTIFIER &&
                 input.lookAhead().getType() != Token.Type.MATH_FUNC &&

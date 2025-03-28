@@ -7,10 +7,12 @@ import java.util.ArrayList;
  * @version 1/20/25, updated 3/10/25
  */
 public class Compound extends Statement {
-    // =========== Fields ===========
-    private final ArrayList<Statement> statements;    // renamed from stmts
 
-    // =========== Constructor ===========
+    // =========================== Fields ===========================
+    private final ArrayList<Statement>    statements;
+
+
+    // ======================= Constructor =========================
     public Compound(TokenStream input) throws Exception {
         validateOpenBrace(input);
         this.statements = new ArrayList<Statement>();
@@ -18,7 +20,8 @@ public class Compound extends Statement {
         validateCloseBrace(input);
     }
 
-    // =========== Core Methods ===========
+
+    // ====================== Core Methods ========================
     @Override
     public void execute() throws Exception {
         Interpreter.MEMORY.beginNestedScope();
@@ -43,7 +46,8 @@ public class Compound extends Statement {
         return sb.append("}").toString();
     }
 
-    // =========== Helper Methods ===========
+
+    // ==================== Helper Methods =======================
     private void validateOpenBrace(TokenStream input) throws Exception {
         if (!input.next().toString().equals("{")) {
             throw new Exception("SYNTAX ERROR: Malformed compound statement");

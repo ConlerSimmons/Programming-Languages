@@ -6,6 +6,7 @@
  */
 public class If extends Statement {
 
+    // ============================== Fields ===============================
     private final Expression condition;     // renamed from test
     private final Compound   thenBlock;     // renamed from ifBody
     private final Compound   elseBlock;     // renamed from elseBody
@@ -29,12 +30,14 @@ public class If extends Statement {
         this.elseBlock = new Compound(input);
     }
 
+    // ========================== Execution Flow ==========================
     @Override
     public void execute() throws Exception {
         DataValue result = evaluateCondition();
         executeAppropriateBlock(result);
     }
 
+    // ========================== Helper Methods =========================
     private DataValue evaluateCondition() throws Exception {
         DataValue result = this.condition.evaluate();
         validateBooleanType(result);

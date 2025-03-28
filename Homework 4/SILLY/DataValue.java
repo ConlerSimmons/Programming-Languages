@@ -5,17 +5,18 @@
  * @version 1/20/25
  */
 public interface DataValue extends Comparable<DataValue> {
-    // ========== Type Definition ==========
+    // ================================= Type System ================================
     enum Type {
-        NUMBER(1),    BOOLEAN(2),    LIST(3),
-        CHAR(4),      STRING(5),     FUNCTION(6);
+        NUMBER(1),        BOOLEAN(2),        LIST(3),
+        CHAR(4),          STRING(5),         FUNCTION(6);
         
         private final int code;
-        Type(int code)      { this.code = code; }
-        public int getCode() { return code; }
+        
+        Type(int code)           { this.code = code; }
+        public int getCode()     { return code; }
     }
 
-    // ========== Core Methods ==========
+    // ============================== Core Operations ===============================
     Object getValue();
     Type getType();
     String toString();

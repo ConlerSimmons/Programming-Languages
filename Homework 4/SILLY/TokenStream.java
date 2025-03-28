@@ -8,31 +8,26 @@ import java.io.File;
  *   @version 1/20/25
  */
 public class TokenStream {
-    private Scanner input;              // keep consistent with input
-    private Token nextToken;            // keep consistent with nextToken
-    private String buffer;              // keep consistent with buffer
 
-    /**
-     * Constructs a TokenStream connected to System.in.
-     */
+    // ================================== Fields ==================================
+    private Scanner        input;
+    private Token         nextToken;
+    private String        buffer;
+
+
+    // =============================== Constructors ==============================
     public TokenStream() {
         this.input = new Scanner(System.in);
         this.buffer = "";
     }
     
-    /**
-     * Constructs a TokenStream connected to a file.
-     *   @param filename the file to read from
-     */
     public TokenStream(String filename) throws java.io.FileNotFoundException {
         this.input = new Scanner(new File(filename));
         this.buffer = "";
     }
 
-    /**
-     * Returns the next token in the TokenStream (without removing it).
-     *   @return the next token
-     */
+
+    // ============================= Token Processing ============================
     public Token lookAhead() {
         if (this.nextToken == null) {
             if (this.buffer.equals("") && this.input.hasNext()) {
@@ -59,10 +54,6 @@ public class TokenStream {
         return this.nextToken;
     }
 
-    /**
-     * Returns the next token in the TokenStream (and removes it).
-     *   @return the next token
-     */
     public Token next() {
         Token safe = this.lookAhead();
         this.nextToken = null;
@@ -70,10 +61,8 @@ public class TokenStream {
         return safe;
     }
      
-    /**
-     * Determines whether there are any more tokens to read.
-     *   @return true if tokens remaining, else false
-     */
+
+    // ============================== Stream State ==============================
     public boolean hasNext() {
         return (this.nextToken != null || !this.buffer.equals("") || this.input.hasNext());
     }

@@ -9,11 +9,13 @@ import java.util.Scanner;
  * @version 1/20/25
  */
 public class Interpreter {
-    // ========== Static Fields ==========
-    public static final MemorySpace MEMORY = new MemorySpace();
-    private static final Map<String, FunctionDecl> functions = new HashMap<>();
 
-    // ========== Function Management ==========
+    // ========================== Static State ===========================
+    public static final MemorySpace                      MEMORY = new MemorySpace();
+    private static final Map<String, FunctionDecl>       functions = new HashMap<>();
+
+
+    // ======================= Function Management ======================
     /**
      * Registers a function declaration in the interpreter.
      * 
@@ -44,7 +46,8 @@ public class Interpreter {
         return functions.containsKey(name);
     }
 
-    // ========== Main Program ==========
+
+    // ======================== Program Entry ==========================
     public static void main(String[] args) throws Exception {
 
         System.out.print(
@@ -78,5 +81,11 @@ public class Interpreter {
         }
 
         input.close();
+    }
+
+
+    // ======================= Helper Methods =========================
+    private static void handleReturnException() {
+        // ...existing code...
     }
 }

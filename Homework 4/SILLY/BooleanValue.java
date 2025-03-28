@@ -5,27 +5,17 @@
  * @version 1/20/25
  */
 public class BooleanValue implements DataValue {
-    private final boolean logicalValue;   // renamed from value
 
-    /**
-     * Identifies the actual type of the value.
-     * 
-     * @return Token.Type.BOOLEAN
-     */
-    @Override
-    public DataValue.Type getType() {
-        return DataValue.Type.BOOLEAN;
-    }
+    // ================================== Fields ==================================
+    private final boolean logicalValue;
 
-    /**
-     * Accesses the stored Boolean value.
-     * 
-     * @return the Boolean value (as an Object)
-     */
+
+    // =============================== Core Methods ===============================
     @Override
-    public Object getValue() {
-        return Boolean.valueOf(this.logicalValue);
-    }
+    public Object getValue()         { return Boolean.valueOf(this.logicalValue); }
+    
+    @Override
+    public DataValue.Type getType()  { return DataValue.Type.BOOLEAN; }
 
     /**
      * Constructs a default Boolean value (true).

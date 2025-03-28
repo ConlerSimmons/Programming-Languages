@@ -5,15 +5,12 @@
  * @version 1/20/25, updated 3/10/25
  */
 public class Assignment extends Statement {
-    // Fields at top with spacing
-    private final Token        targetVar;    // renamed from vbl
-    private final Expression  valueExpr;    // renamed from expr
 
-    /**
-     * Reads in a assignment statement from the specified TokenStream.
-     * 
-     * @param input the stream to be read from
-     */
+    // =============================== Fields ================================
+    private final Token         targetVar;      // Variable being assigned to
+    private final Expression    valueExpr;      // Expression to evaluate
+
+    // =========================== Constructor ==============================
     public Assignment(TokenStream input) throws Exception {
         this.targetVar = input.next();
         if (this.targetVar.getType() != Token.Type.IDENTIFIER) {
@@ -27,13 +24,19 @@ public class Assignment extends Statement {
         this.valueExpr = new Expression(input);
     }
 
-    // Execute method first
+    // ========================== Core Methods =============================
     @Override
     public void execute() throws Exception {
         validateAssignment();
         storeValue();
     }
 
+    @Override
+    public String toString() {
+        return this.targetVar + " = " + this.valueExpr;
+    }
+
+    // ========================= Helper Methods ===========================
     private void validateAssignment() throws Exception {
         if (Interpreter.MEMORY.isFunctionDeclared(this.targetVar.toString())) {
             throw new Exception("RUNTIME ERROR: Cannot assign to '" + this.targetVar + "' - name exists as function");
@@ -45,14 +48,5 @@ public class Assignment extends Statement {
             Interpreter.MEMORY.declareVariable(this.targetVar);
         }
         Interpreter.MEMORY.storeValue(this.targetVar, this.valueExpr.evaluate());
-    }
-
-    /**
-     * Converts the current assignment statement into a String.
-     * 
-     * @return the String representation of this statement
-     */
-    public String toString() {
-        return this.targetVar + " = " + this.valueExpr;
     }
 }

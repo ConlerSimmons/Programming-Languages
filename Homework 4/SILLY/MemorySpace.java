@@ -9,10 +9,12 @@ import java.util.Map;
  * @version 1/20/25, updated 3/10/25
  */
 public class MemorySpace {
-    // ========== Fields ==========
-    private final Stack<ScopeRec> scopeStack;
-    private final Map<String, FunctionDecl> functionTable;
 
+    // ================================ Fields ================================
+    private final Stack<ScopeRec>           scopeStack;
+    private final Map<String, FunctionDecl>  functionTable;
+
+    // ============================= Scope Methods ===========================
     /**
      * Constructs a memory space with a single (global) scope record.
      */
@@ -22,7 +24,6 @@ public class MemorySpace {
         this.functionTable = new HashMap<String, FunctionDecl>();
     }
 
-    // ========== Scope Management ==========
     public void beginNestedScope() {
         this.scopeStack.push(new ScopeRec(this.scopeStack.peek()));
     }
@@ -35,7 +36,7 @@ public class MemorySpace {
         this.scopeStack.pop();
     }
 
-    // ========== Variable Operations ==========
+    // ============================ Memory Methods ===========================
     /**
      * Declares a variable (without storing an actual value).
      *

@@ -9,38 +9,22 @@ import java.util.List;
  */
 public class StringValue extends ListValue {
 
-    /**
-     * Accesses the stored string value.
-     * 
-     * @return the string value (as an Object)
-     */
+    // =========================== Interface Methods ===========================
     @Override
-    public DataValue.Type getType() {
-        return DataValue.Type.STRING;
+    public DataValue.Type getType()       { return DataValue.Type.STRING; }
+
+    @Override
+    public int compareTo(DataValue other) {
+        return this.toString().compareTo(other.toString());
     }
 
-    /**
-     * Constructs a default string value.
-     */
-    public StringValue() {
-        super();
-    }
 
-    /**
-     * Constructs a string value.
-     * 
-     * @param str the string being stored
-     */
-    public StringValue(String str) {
-        super(createCharValueList(str));
-    }
+    // ============================== Constructors ============================
+    public StringValue()                  { super(); }
+    public StringValue(String str)        { super(createCharValueList(str)); }
 
-    /**
-     * Helper method to convert a string into a list of CharValue objects.
-     * 
-     * @param str the string being converted
-     * @return a list of CharValue objects representing the characters in the string
-     */
+
+    // ============================= Core Methods ============================
     private static ArrayList<DataValue> createCharValueList(String str) {
         ArrayList<DataValue> charValues = new ArrayList<>();
         for (char c : str.toCharArray()) {
@@ -49,11 +33,6 @@ public class StringValue extends ListValue {
         return charValues;
     }
 
-    /**
-     * Converts the string value to a String.
-     * 
-     * @return a String representation of the string value
-     */
     @Override
     @SuppressWarnings("unchecked")
     public String toString() {
@@ -63,15 +42,5 @@ public class StringValue extends ListValue {
             result.append(v.toString());
         }
         return result.toString();
-    }
-
-    /**
-     * Comparison method for StringValues.
-     * 
-     * @param other the value being compared with
-     */
-    @Override
-    public int compareTo(DataValue other) {
-        return this.toString().compareTo(other.toString());
     }
 }

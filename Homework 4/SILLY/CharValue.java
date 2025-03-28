@@ -6,10 +6,10 @@
  */
 public class CharValue implements DataValue {
 
-    // =========== Fields ===========
+    // ================================ Fields ================================
     private final Character charValue;   // renamed from value for clarity
 
-    // =========== Interface Methods ===========
+    // ============================= Core Methods ============================
     @Override
     public Object getValue() { return this.charValue; }
 

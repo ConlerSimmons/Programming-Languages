@@ -7,9 +7,57 @@ import java.util.ArrayList;
  * @version 3/10/25
  */
 public class FunctionDecl extends Statement {
-    private final Token functionIdentifier;           // renamed from name
-    private final ArrayList<Token> formalParams;      // renamed from parameters
-    private final Compound functionImplementation;    // renamed from body
+
+    // =============================== Fields ================================
+    private final Token              functionIdentifier;
+    private final ArrayList<Token>   formalParams;
+    private final Compound           functionImplementation;
+
+
+    // ========================== Public Interface ==========================
+    public Token getName()                      { return this.functionIdentifier; }
+    public ArrayList<Token> getParameters()     { return this.formalParams; }
+    public Compound getBody()                  { return this.functionImplementation; }
+
+
+    // =========================== Core Methods ============================
+    @Override
+    public void execute() throws Exception {
+        validateDeclaration();
+        registerFunction();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("func " + this.functionIdentifier + "(");
+        for (int i = 0; i < formalParams.size(); i++) {
+            if (i > 0) {
+                result.append(" ");
+            }
+            result.append(formalParams.get(i));
+        }
+        result.append(") ");
+        result.append(this.functionImplementation.toString());
+        return result.toString();
+    }
+
+
+    // ========================== Helper Methods ===========================
+    private void validateDeclaration() throws Exception {
+        if (Interpreter.MEMORY.isDeclared(this.functionIdentifier)) {
+            throw new Exception("RUNTIME ERROR: Cannot declare function - name exists as variable");
+        }
+        if (Interpreter.MEMORY.isFunctionDeclared(this.functionIdentifier.toString())) {
+            throw new Exception("RUNTIME ERROR: Function already declared");
+        }
+    }
+
+    private void registerFunction() {
+        Interpreter.registerFunction(this.functionIdentifier.toString(), this);
+        Interpreter.MEMORY.storeFunction(this.functionIdentifier.toString(), this);
+        Interpreter.MEMORY.declareVariable(this.functionIdentifier);
+        Interpreter.MEMORY.storeValue(this.functionIdentifier, new BooleanValue(true));
+    }
 
     /**
      * Reads in a function declaration from the specified stream
@@ -43,76 +91,5 @@ public class FunctionDecl extends Statement {
 
         input.next();
         this.functionImplementation = new Compound(input);
-    }
-
-    /**
-     * Gets the name of the function.
-     *
-     * @return the name token of the function
-     */
-    public Token getName() {
-        return this.functionIdentifier;
-    }
-
-    /**
-     * Gets the parameters of the function.
-     *
-     * @return the list of parameters
-     */
-    public ArrayList<Token> getParameters() {
-        return this.formalParams;
-    }
-
-    /**
-     * Gets the body of the function.
-     *
-     * @return the compound statement representing the function body
-     */
-    public Compound getBody() {
-        return this.functionImplementation;
-    }
-
-    /**
-     * Executes the current function declaration.
-     */
-    @Override
-    public void execute() throws Exception {
-        validateDeclaration();
-        registerFunction();
-    }
-
-    private void validateDeclaration() throws Exception {
-        if (Interpreter.MEMORY.isDeclared(this.functionIdentifier)) {
-            throw new Exception("RUNTIME ERROR: Cannot declare function - name exists as variable");
-        }
-        if (Interpreter.MEMORY.isFunctionDeclared(this.functionIdentifier.toString())) {
-            throw new Exception("RUNTIME ERROR: Function already declared");
-        }
-    }
-
-    private void registerFunction() {
-        Interpreter.registerFunction(this.functionIdentifier.toString(), this);
-        Interpreter.MEMORY.storeFunction(this.functionIdentifier.toString(), this);
-        Interpreter.MEMORY.declareVariable(this.functionIdentifier);
-        Interpreter.MEMORY.storeValue(this.functionIdentifier, new BooleanValue(true));
-    }
-
-    /**
-     * Converts the current function declaration into a String.
-     * 
-     * @return the String representation of this statement
-     */
-    @Override
-    public String toString() {
-        StringBuilder result = new StringBuilder("func " + this.functionIdentifier + "(");
-        for (int i = 0; i < formalParams.size(); i++) {
-            if (i > 0) {
-                result.append(" ");
-            }
-            result.append(formalParams.get(i));
-        }
-        result.append(") ");
-        result.append(this.functionImplementation.toString());
-        return result.toString();
     }
 }
