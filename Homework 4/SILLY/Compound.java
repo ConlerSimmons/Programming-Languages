@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * Derived class that represents a compound statement in the SILLY language.
  *
- * @author Dave Reed & Owen McGrath
+ * @author Dave Reed & Conler Simmons
  * @version 1/20/25, updated 3/10/25
  */
 public class Compound extends Statement {

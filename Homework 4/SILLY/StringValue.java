@@ -4,7 +4,7 @@ import java.util.List;
 /**
  * Class that represents a string value.
  * 
- * @author Owen McGrath
+ * @author Conler Simmons
  * @version 2/07/25
  */
 public class StringValue extends ListValue {

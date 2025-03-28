@@ -1,7 +1,7 @@
 /**
  * Derived class that represents a repeat statement in the SILLY language.
  * 
- * @author Owen McGrath
+ * @author Conler Simmons
  * @version 2/10/25
  */
 public class Repeat extends Statement {

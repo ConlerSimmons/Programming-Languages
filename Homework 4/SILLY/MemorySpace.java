@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Class that defines the memory space for the SILLY interpreter.
  *
- * @author Dave Reed & Owen McGrath
+ * @author Dave Reed & Conler Simmons
  * @version 1/20/25, updated 3/10/25
  */
 public class MemorySpace {

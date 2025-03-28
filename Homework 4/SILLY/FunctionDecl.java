@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * Derived class that represents a function declaration in the SILLY language.
  * 
- * @author Owen McGrath
+ * @author Conler Simmons
  * @version 3/10/25
  */
 public class FunctionDecl extends Statement {
