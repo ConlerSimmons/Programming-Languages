@@ -148,4 +148,8 @@
                        wins))))]
     (simulate games 0)))
    
-   
+  (println "Light delay (minutes):" (light-delay-min 93000000))
+  (println "Traveler time:" (time-to-traveler 4.2 0.5))
+  (println "Remove at index:" (drop-at-index '(1 2 3 4) 2))
+  (println "Roll 1000 dice, count 7s:" (match-rolls 1000 6 7))
+  (println "Craps win percentage:" (craps-success-rate 1000))
