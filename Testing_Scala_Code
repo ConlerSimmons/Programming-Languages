@@ -1,0 +1,14 @@
+object HelloWorld {
+    def main(args: Array[String]): Unit = {
+        println("Hello, Scala!")
+        
+        // Demonstrate some basic Scala features
+        val numbers = List(1, 2, 3, 4, 5)
+        val doubled = numbers.map(_ * 2)
+        println(s"Doubled numbers: $doubled")
+        
+        // Simple function example
+        def square(x: Int): Int = x * x
+        println(s"Square of 5 is ${square(5)}")
+    }
+}
