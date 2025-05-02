@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "../../Java Coding/CSC 421/hw5-lightup-ConlerSimmons"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.watcherExclude": {
+			"**/target": true
+		}
+	}
+}
