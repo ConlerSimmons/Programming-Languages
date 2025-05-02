@@ -51,3 +51,15 @@ about why stdout printed to this file is prepended with `;` to be line comments.
 clj꞉user꞉> 
 ; Jack-in done.
 clj꞉user꞉> 
+; Running all project tests…
+; No tests found. 😱, ns: 0, vars: 0
+clj꞉user꞉> 
+; Syntax error compiling at (ConlerSimmons-hw6.clj:160:49).
+; Unable to resolve symbol: roll-until-doubles in this context
+clj꞉user꞉> 
+; Running all project tests…
+; No tests found. 😱, ns: 0, vars: 0
+clj꞉user꞉> 
+; Running all project tests…
+; No tests found. 😱, ns: 0, vars: 0
+clj꞉user꞉> 
