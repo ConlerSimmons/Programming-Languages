@@ -1,7 +1,7 @@
-;; Name: Conler Simmons
-;; CSC 533 - HW6: Clojure Structures
+;; Author: Conler Simmons
+;; CSC 533 - Homework 6: Exploring Clojure Data Structures
 
-;;; periodic table of elements
+;;; Comprehensive periodic table of elements
 (def PERIODIC-TABLE
   {:H  [1   1.0080 :Hydrogen]      :He [2   4.0026 :Helium]
    :Li [3   6.9410 :Lithium]       :Be [4   9.0122 :Beryllium]
@@ -10,16 +10,19 @@
    ;; truncated for brevity — keep the rest of PERIODIC-TABLE unchanged
    :Ts [117 294.0000 :Tennessine]  :Og [118 294.0000 :Oganesson]})
 
-;;; binary tree functions
+;;; Functions to navigate binary trees represented as vectors
 (defn root [btree] (nth btree 0))
+
 (defn left-subtree [btree] (nth btree 1))
+
 (defn right-subtree [btree] (nth btree 2))
+
 (defn height [tree]
   (if (empty? tree)
     0
     (inc (max (height (left-subtree tree)) (height (right-subtree tree))))))
 
-;;; Die "class" using protocol & interface
+;;; Implementation of a Die type using protocols and mutable state
 (defprotocol DieInterface
   (roll [this])
   (get-sides [this])
@@ -36,18 +39,27 @@
   ([sides] (Die. sides 0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;      ADD YOUR CODE BELOW HERE
+;;;               BEGIN YOUR ADDITIONS BELOW THIS LINE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;; Section One: Atomic & Molecular Calculations
+
+;; Retrieve the atomic number associated with a given element keyword
 (defn atomic-number [element]
-  (first (get PERIODIC-TABLE element)))
+  (first (get PERIODIC-TABLE element)) 
+)
 
+;; Obtain the atomic mass of the specified element
 (defn atomic-weight [element]
-  (second (get PERIODIC-TABLE element)))
+  (second (get PERIODIC-TABLE element))
+)
 
+;; Calculate molecular weight by summing atomic weights of each element in the list
 (defn molecular-weight1 [elements]
-  (reduce + (map atomic-weight elements)))
+  (reduce + (map atomic-weight elements))
+)
 
+;; Compute molecular weight with support for element counts following each symbol
 (defn molecular-weight2 [elements]
   (loop [els elements sum 0.0]
     (if (empty? els)
@@ -60,6 +72,7 @@
             (recur rest-els (+ sum (atomic-weight element))))
           (recur rest-els sum))))))
 
+;; Extend molecular weight calculation to handle nested molecular groups with counts
 (defn molecular-weight3 [elements]
   (loop [els elements sum 0.0]
     (if (empty? els)
@@ -78,14 +91,19 @@
           :else
           (recur rest-els sum))))))
 
+;;; Section Two: Binary Tree Utilities and BST Verification
+
+;; Example tree of animals for testing
 (def ANIMALS
   '(:dog
     (:bird (:horse () ()) (:cat () ()))
     (:possum (:dog () ()) ())))
 
+;; Example numeric binary tree for testing BST properties
 (def NUMBERS
   '(2 (-1 () ()) (3 () ())))
 
+;; Find the rightmost value in a binary tree by traversing right subtrees
 (defn rightmost [btree]
   (if (empty? btree)
     nil
@@ -93,6 +111,7 @@
       (root btree)
       (rightmost (right-subtree btree)))))
 
+;; Find the leftmost value in a binary tree by traversing left subtrees
 (defn leftmost [btree]
   (if (empty? btree)
     nil
@@ -100,6 +119,7 @@
       (root btree)
       (leftmost (left-subtree btree)))))
 
+;; Determine if a binary tree satisfies the binary search tree ordering property
 (defn is-bst? [btree]
   (if (empty? btree)
     true
@@ -111,6 +131,7 @@
            (is-bst? left-value)
            (is-bst? right-value)))))
 
+;; Verify if a binary tree is height-balanced, meaning subtree heights differ by no more than one
 (defn is-balanced? [btree]
   (if (empty? btree)
     true
@@ -120,6 +141,7 @@
            (is-balanced? (left-subtree btree))
            (is-balanced? (right-subtree btree))))))
 
+;; Confirm that a binary tree is an AVL tree: balanced and satisfies BST constraints
 (defn is-avl? [btree]
   (if (empty? btree)
     true
@@ -130,6 +152,9 @@
            (is-avl? (left-subtree btree))
            (is-avl? (right-subtree btree))))))
 
+;;; Section Three: Dice Simulation and Rolling Mechanics
+
+;; Simulate rolling two dice repeatedly until both dice show the same number (doubles)
 (defn roll-until-doubles [sides]
   (let [die1 (make-die sides)
         die2 (make-die sides)]
@@ -142,7 +167,7 @@
           (recur (inc rolls)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;            PRINT TESTS BELOW FOR FULL-FILE EXECUTION
+;;;               DEMONSTRATION OUTPUT FOR FULL-RUN VALIDATION
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (println "Atomic number of H:" (atomic-number :H))

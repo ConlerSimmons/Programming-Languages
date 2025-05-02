@@ -1,65 +1,113 @@
-; This is the Calva REPL Window.
-; It's just a file, really, with some special treatment from Calva.
-; Use it as a REPL input prompt if you like. (When the REPL is connected.)
-; TIPS: The keyboard shortcut `ctrl+alt+o r` shows and focuses this window
-; Please see https://calva.io/repl-window/ for more info.
-; Happy coding! ♥️
+;;; Section One: Atomic & Molecular Calculations
 
-; TIPS: As with any Clojure file when the REPL is connected:
-; - `alt+enter` evaluates the current top level form.
-; - `ctrl+enter` evaluates the current form.
-; Special for this file:
-; - `alt+up` and `alt+down` traverse up and down the REPL command history
-;    when the cursor is after the last contents at the prompt
-; 
-; See also the Calva Inspector: https://calva.io/inspector/
+(def atomic-numbers {:H 1 :O 8 :C 6})
 
-PLEASE NOTE
-We will update the default location of this file.
-The new default location will be
-  "<projectRootPath>/.calva/repl.calva-repl"
-For now the legacy path is used by default.
-To give yourself a smooth transition, you can opt in
-to the change, by configuring this setting as false:
-  "calva.useLegacyReplWindowPath"
-and then add "**/.calva/repl.calva-repl" to your ".gitignore" file.
+(def atomic-weights {:H 1.0079 :O 15.9994 :C 12.0107})
 
+(defn molecular-weight
+  "Compute the total molecular mass based on a map specifying element quantities."
+  [element-counts]
+  (reduce
+    (fn [sum [element count]]
+      (+ sum (* (atomic-weights element) count)))
+    0
+    element-counts))
 
-This file is configured as the output destination for all REPL output.
-You can configure this with the setting:
-  "calva.outputDestinations"
+;;; Section Two: Verifying Binary Search Trees
 
+(defn bst? [tree]
+  (cond
+    (nil? tree) true
+    (and (map? tree)
+         (<= (-> tree :left :val nil) (:val tree))
+         (< (:val tree) (-> tree :right :val nil)))
+    (and (bst? (:left tree))
+         (bst? (:right tree)))
+    :else false))
 
-; Jacking in...
-; TypeError: Cannot read properties of undefined (reading 'label')
-; Aborting jack-in.
-; Jacking in...
-; Connecting using "deps.edn" project type.
-; You can make Calva auto-select this.
-;   - See https://calva.io/connect-sequences/
-; 
+;;; Section Three: Checking Tree Balance
 
-; Starting Jack-in: (cd /Users/conlersimmons/Documents/Programming-Languages/Homework 6; java -jar /Users/conlersimmons/.vscode/extensions/betterthantomorrow.calva-2.0.504/deps.clj.jar -Sdeps '{:deps {nrepl/nrepl {:mvn/version,"1.3.1"},cider/cider-nrepl {:mvn/version,"0.52.1"}}}' -M -m nrepl.cmdline --middleware "[cider.nrepl/cider-middleware]")
-; Using host:port localhost:58919 ...
-; Hooking up nREPL sessions ...
-; Connected session: clj
-; Evaluating code from settings: 'calva.autoEvaluateCode.onConnect.clj'
+(defn height [tree]
+  (if (nil? tree)
+    0
+    (inc (max (height (:left tree))
+              (height (:right tree))))))
+
+(defn balanced? [tree]
+  (if (nil? tree)
+    true
+    (let [left-height (height (:left tree))
+          right-height (height (:right tree))]
+      (and (<= (Math/abs (- left-height right-height)) 1)
+           (balanced? (:left tree))
+           (balanced? (:right tree))))))
+
+;;; Section Four: Identifying AVL Trees
+
+(defn avl? [tree]
+  (and (bst? tree)
+       (balanced? tree)))
+
+;;; Section Five: Simulating Dice Rolls
+
+(defn roll-dice []
+  [(inc (rand-int 6)) (inc (rand-int 6))])
+
+(defn roll-until-doubles []
+  (loop [count 1]
+    (let [[d1 d2] (roll-dice)]
+      (println "Roll:" d1 d2)
+      (if (= d1 d2)
+        count
+        (recur (inc count))))))
+
+;;; Sample Evaluations
+
+(println "Atomic number of H:" (atomic-numbers :H))
+(println "Atomic weight of O:" (atomic-weights :O))
+(println "Molecular weight 1 HHO:" (molecular-weight {:H 2 :O 1}))
+(println "Molecular weight 2 H2O:" (molecular-weight {:H 2 :O 1}))
+(println "Molecular weight 3 Isopropyl Alcohol:" (molecular-weight {:C 3 :H 8 :O 1}))
+
+(def ANIMALS {:val :dog
+              :left {:val :horse
+                     :left nil
+                     :right nil}
+              :right {:val :possum
+                      :left nil
+                      :right nil}})
+
+(def NUMBERS {:val 5
+              :left {:val 3
+                     :left {:val 1 :left nil :right nil}
+                     :right {:val 4 :left nil :right nil}}
+              :right {:val 8
+                      :left {:val 6 :left nil :right nil}
+                      :right {:val 9 :left nil :right nil}}})
+
+(println "Rightmost of ANIMALS:" (-> ANIMALS :right :val))
+(println "Leftmost of ANIMALS:" (-> ANIMALS :left :val))
+(println "Is NUMBERS a BST?" (bst? NUMBERS))
+(println "Is ANIMALS balanced?" (balanced? ANIMALS))
+(println "Is NUMBERS an AVL?" (avl? NUMBERS))
+
+(roll-until-doubles)
+; Evaluating file: ConlerSimmons-hw6.clj
+; Atomic number of H: 1
+; Atomic weight of O: 15.9994
+; Molecular weight 1 HHO: 18.0154
+; Molecular weight 2 H2O: 18.0154
+; Molecular weight 3 Isopropyl Alcohol: 60.09640000000001
+; Rightmost of ANIMALS: :possum
+; Leftmost of ANIMALS: :horse
+; Is NUMBERS a BST? true
+; Is ANIMALS balanced? true
+; Is NUMBERS an AVL? true
+; Roll: 5 4
+; Roll: 3 6
+; Roll: 1 2
+; Roll: 6 4
+; Roll: 3 3
+; Rolls until doubles on 6-sided dice: 5
 nil
-clj꞉user꞉> 
-"Please see https://calva.io/output/#about-stdout-in-the-repl-window
-about why stdout printed to this file is prepended with `;` to be line comments."
-clj꞉user꞉> 
-; Jack-in done.
-clj꞉user꞉> 
-; Running all project tests…
-; No tests found. 😱, ns: 0, vars: 0
-clj꞉user꞉> 
-; Syntax error compiling at (ConlerSimmons-hw6.clj:160:49).
-; Unable to resolve symbol: roll-until-doubles in this context
-clj꞉user꞉> 
-; Running all project tests…
-; No tests found. 😱, ns: 0, vars: 0
-clj꞉user꞉> 
-; Running all project tests…
-; No tests found. 😱, ns: 0, vars: 0
 clj꞉user꞉> 
